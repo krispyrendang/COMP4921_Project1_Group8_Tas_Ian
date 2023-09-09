@@ -1,0 +1,31 @@
+{
+  "name": "comp4921_project1_group8_tas_ian",
+  "version": "1.0.0",
+  "description": "A website mashup: Think imgur meets Pastebin meets Bit.ly",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krispyrendang/COMP4921_Project1_Group8_Tas_Ian.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krispyrendang/COMP4921_Project1_Group8_Tas_Ian/issues"
+  },
+  "homepage": "https://github.com/krispyrendang/COMP4921_Project1_Group8_Tas_Ian#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "connect-mongo": "^5.0.0",
+    "dotenv": "^16.3.1",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.17.3",
+    "mysql2": "^3.6.0",
+    "nodemon": "^3.0.1",
+    "utils": "^0.3.1"
+  }
+}

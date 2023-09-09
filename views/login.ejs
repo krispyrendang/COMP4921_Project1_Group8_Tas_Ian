@@ -1,0 +1,12 @@
+<%- include("templates/header") %>
+log in
+<form action='/loggingin' method='post'>
+    <input name='email' type='email' placeholder='email'>
+    <input name='password' type='password' placeholder='password'>
+    <button>Submit</button>
+</form>
+<br>
+<%  if (error != "none") { %>
+<div><%= error %> </div>
+<% } %>
+<%- include("templates/footer") %>
