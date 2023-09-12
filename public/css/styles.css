@@ -1,0 +1,128 @@
+/* createUser.ejs, login.ejs  */
+.info-box {
+    width: 100%;
+    height: 100%;
+}
+
+.panel-info {
+    width: 400px;
+    height: 205px;
+    position: absolute;
+    top: 47%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid #caf0f8; 
+    border-radius: 5px;
+    background-color: white;
+}
+
+.panel-heading {
+    background-color: #caf0f8; 
+    padding: 7px; 
+    opacity: 75%;
+}
+
+.panel-title {
+    padding-left: 10px; 
+    color: #023e8a;
+}
+
+.panel-signin {
+    float: right; 
+    font-size: 85%; 
+    position: relative; 
+    top:-10px;
+}
+
+.btn-signup {
+    margin-left: 15px; 
+    margin-bottom: 15px; 
+    background-color: #0077b6; 
+    color: white; 
+    cursor: pointer; 
+    border: none; 
+    text-decoration: none; 
+    padding: 5px 12px; 
+    border-radius: 3px;
+}
+
+.form-control {
+    width: 90%; 
+    margin: auto; 
+    display: block;
+}
+
+.btn-login {
+    margin-left: 15px; 
+    background-color: #4CAF50; 
+    color: white; 
+    cursor: pointer; 
+    border: none; 
+    text-decoration: none; 
+    padding: 5px 12px; 
+    border-radius: 3px;
+}
+
+/* header.ejs */
+.navbar {
+    width: 80%;
+    margin: 0 auto;
+}
+
+.navbar h1 {
+    float: left;
+}
+
+header {
+    background: #778da9;
+}
+
+header::after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
+nav {
+    float: right;
+}
+
+nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+nav li {
+    display: inline-block;
+    margin-left: 70px;
+    padding-top: 30px;
+}
+
+nav a {
+    color: #444;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
+nav a:hover {
+    color: #000;
+}
+
+.btn-logout {
+    color: #444;
+    background: none;
+    border: none;
+    padding: 0;
+    text-decoration: underline;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.btn-logout:hover {
+    color: #000;
+}
+
+/* index.js */
+

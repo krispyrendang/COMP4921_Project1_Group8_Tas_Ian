@@ -1,36 +1,43 @@
-<%- include('templates/header'); -%>
-<div class="container" style="width: 400px; margin-left: auto; margin-right: auto;">   
-    <div id="loginbox" style="margin-top:50px;">                   
-        <div class="panel panel-info" style="border: 2px solid #caf0f8; border-radius: 5px;">
-            <div class="panel-heading" style="background-color: #caf0f8; padding: 7px; opacity: 75%;">
-                <div class="panel-title" style="padding-left: 10px; color: #023e8a;">Sign In</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <% if (locals.scripts) { %> 
+        <% for(var i=0; i<scripts.length; i++) { %>
+            <script src="<%= scripts[i]%>"></script>
+        <% } %> 
+    <% } %> 
+    <link rel="stylesheet" href="/css/styles.css" type="text/css">
+</head>
+<body style="margin: 0px; background-color: #1b263b;">
+    
+<div class="container">   
+    <div class="info-box">                   
+        <div class="panel-info">
+            <div class="panel-heading">
+                <div class="panel-title">Sign In</div>
             </div>    
             <div class="panel-body" style="padding-top:20px" >
                 <form method="post" action="/loggingin">
                     <div style="margin-bottom: 15px" class="input-group">
-                        <input id="login-email" type="email" class="form-control" name="email" placeholder="email" style="width: 90%; margin: auto; display: block;">
+                        <input id="login-email" type="email" class="form-control" name="email" placeholder="email">
                     </div>
                     <div style="margin-bottom: 15px" class="input-group">
-                        <input id="login-password" type="password" class="form-control" name="password" placeholder="password" style="width: 90%; margin: auto; display: block;">
+                        <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
                     </div>
                     
                     <%  if (error != "none") { %>
                         <div style="padding-left: 15px; font-size:85%;"><%= error %> </div>
                     <% } %>
 
-                    <div style="margin-top:15px" class="form-group">						
-                        <button id="btn-login" type="submit" class="btn btn-success" 
-                        style="margin-left: 15px; 
-                        background-color: #4CAF50; 
-                        color: white; 
-                        cursor: pointer; 
-                        border: none; 
-                        text-decoration: none; 
-                        padding: 5px 12px; 
-                        border-radius: 3px;">Login</button>
+                    <div class="btn" style="margin-top:15px">						
+                        <button class="btn-login" type="submit">Login</button>
                     </div>
-                    <div class="form-group" style="padding: 15px;">
-                        <div style="border-top: 1px solid#888; padding-top: 10px; font-size:85%" >
+                    <div class="info" style="padding: 15px;">
+                        <div class="info-redirect" style="border-top: 1px solid#888; padding-top: 10px; font-size:85%" >
                             Don't have an account!
                             <a href="/signup">Sign Up Here</a>
                         </div>

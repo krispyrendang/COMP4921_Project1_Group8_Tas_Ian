@@ -232,7 +232,7 @@ app.post('/logout', (req, res) => {
 
     req.session.authenticated = false;
     req.session.destroy();
-    res.render("index");
+    res.redirect("/");
 });
 
 app.use('/home', sessionValidation);
@@ -275,7 +275,7 @@ function adminAuthorization(req, res, next) {
     }
 }
 
-
+app.use(express.static("public"));
 app.use(express.static(__dirname + "/public"));
 
 app.get("*", (req, res) => {

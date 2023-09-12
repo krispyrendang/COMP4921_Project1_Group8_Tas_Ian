@@ -10,5 +10,27 @@
             <script src="<%= scripts[i]%>"></script>
         <% } %> 
     <% } %> 
+    <link rel="stylesheet" href="/css/styles.css" type="text/css">
 </head>
-<body>
+<body style="margin: 0px;">
+
+<header>
+    <div class="navbar">
+
+        <!-- LOGO? -->
+        <h1>TI</h1>
+
+        <nav>
+            <ul>
+                <li><a href="#">Temp</a></li>
+                <li><a href="#">Temp</a></li>
+                <li><a href="#">Temp</a></li>
+                <li>
+                    <form action='/logout' method='post'>
+                        <button class="btn-logout">Log out</button>
+                    </form>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>

@@ -1,15 +1,32 @@
-<%- include("templates/header") %>
-<div style=
-"background-image: url('/public/pexels-daniel-absi-952670.jpg'); 
-height: 100%; 
-background-position: center;
-background-size: cover;
-position: relative;
-color: white;"></div>
-<form action='/signup' method='get'>
-    <button>Sign up</button>
-</form>
-<form action='/login' method='get'>
-    <button>Log in</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <% if (locals.scripts) { %> 
+        <% for(var i=0; i<scripts.length; i++) { %>
+            <script src="<%= scripts[i]%>"></script>
+        <% } %> 
+    <% } %> 
+    <link rel="stylesheet" href="/css/styles.css" type="text/css">
+</head>
+<body style="margin: 0px;">
+
+<div class="index-page">
+    <div class="title">
+        <h1>Welcome to TI</h1>
+    </div>
+
+
+    <div class="btn">
+        <form action='/signup' method='get'>
+            <button class="btn-index-signup">Sign up</button>
+        </form>
+        <form action='/login' method='get'>
+            <button class="btn-index-login">Log in</button>
+        </form>
+    </div>
+</div>
 <%- include("templates/footer") %>
