@@ -167,6 +167,17 @@ app.get('/login', (req, res) => {
     });
 });
 
+app.get('/profile', (req, res) => {
+    username = req.session.username;
+    if (!isValidSession(req)) {
+        res.redirect("/");
+    } else {
+        res.render("profile", {
+            username
+        })
+    }
+})
+
 app.get('/createTables', async (req, res) => {
 
     const create_tables = include('database/create_tables');

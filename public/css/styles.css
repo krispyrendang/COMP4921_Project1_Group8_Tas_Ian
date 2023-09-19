@@ -1,3 +1,7 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 /* createUser.ejs, login.ejs  */
 .info-box {
     width: 100%;
@@ -95,19 +99,10 @@ nav ul {
 
 nav li {
     display: inline-block;
-    margin-left: 70px;
+    margin-left: 60px;
     padding-top: 30px;
-}
 
-nav a {
-    color: #444;
-    text-decoration: none;
-    text-transform: uppercase;
-    font-size: 14px;
-}
-
-nav a:hover {
-    color: #000;
+    position: relative;
 }
 
 .btn-logout {
@@ -115,14 +110,118 @@ nav a:hover {
     background: none;
     border: none;
     padding: 0;
-    text-decoration: underline;
+    text-decoration: none;
     text-transform: uppercase;
     cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+nav button::before {
+    content: '';
+    display: block;
+    height: 5px;
+    width: 100%;
+    background-color: #444;
+
+    position: absolute;
+    top: 0;
+    width: 0%;
+
+    transition: all ease-in-out 250ms;
+}
+
+nav button:hover::before  {
+    width: 100%;
 }
 
 .btn-logout:hover {
     color: #000;
 }
 
-/* index.js */
+/* home.js */
+.option-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.action-btns button {
+    width: 60px;
+    margin: 10px;
+    padding: 5px;
+    background-color: #3a5a40; 
+    color: white; 
+    cursor: pointer; 
+    border: none; 
+    text-decoration: none; 
+    border-radius: 3px;
+}
+
+.action-btns button:hover {
+    background-color: #344e41;
+}
+
+.home-table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table-info table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.table-info table th, .table-info table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.table-info table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.table-info table tr:hover {
+    background-color: #ddd;
+}
+
+.table-info table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #ccc5b9;
+  color: #252422;
+}
+
+/* profile.ejs */
+.user-info {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    font-family: arial;
+}
+
+.user-info button {
+    border: none;
+    outline: 0;
+    display: inline-block;
+    padding: 8px;
+    color: white;
+    background-color: #000;
+    text-align: center;
+    cursor: pointer;
+    width: 97px;
+    font-size: 18px;
+}
+
+.user-info button:hover {
+    opacity: 0.7;
+}
+
+.profile-divider {
+    border-top: 1px solid#888; 
+    margin-top: 10px; 
+    width: 75%;
+    margin-left: 13%;
+}

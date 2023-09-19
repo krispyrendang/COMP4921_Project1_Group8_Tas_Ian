@@ -18,13 +18,18 @@
     <div class="navbar">
 
         <!-- LOGO? -->
-        <h1>TI</h1>
+        <!-- <h1>TI</h1> -->
 
         <nav>
             <ul>
-                <li><a href="#">Temp</a></li>
-                <li><a href="#">Temp</a></li>
-                <li><a href="#">Temp</a></li>
+                <li>
+                    <form action="/home" method="get">
+                        <button class="btn-logout">Home</button>
+                    </form>
+                </li>
+                <li><form action="/profile" method="get">
+                    <button class="btn-logout">My Profile</button>
+                </form></li>
                 <li>
                     <form action='/logout' method='post'>
                         <button class="btn-logout">Log out</button>
