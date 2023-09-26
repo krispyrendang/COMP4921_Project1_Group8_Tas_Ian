@@ -125,73 +125,10 @@ app.get('/admin', async (req, res) => {
 
 });
 
-app.get('/home', async (req, res) => {
-    // var missingInfo = req.query.missing;
-    user_id = req.session.user_id;
-    username = req.session.username;
-
-    if (!isValidSession(req)) {
-        res.redirect("/");
-    } else {
-        // var resultList = await db_users.getToDoList({
-        //     user_id
-        // });
-
-        console.log("user id " + user_id + " " + username + " has successfully logged in!");
-
-
-        res.render("home", {
-            username
-        });
-
-        // if (resultList) {
-
-        //     res.render("todo", {
-        //         list: resultList,
-        //         username,
-        //         missing: missingInfo
-        //     });
-        // } else {
-        //     res.render("todo", {
-        //         list: "none",
-        //         username,
-        //         missing: missingInfo
-        //     });
-        // }
-    }
-});
-
 app.get('/login', (req, res) => {
     res.render("login", {
         error: "none"
     });
-});
-
-app.get('/profile', (req, res) => {
-    username = req.session.username;
-    if (!isValidSession(req)) {
-        res.redirect("/");
-    } else {
-        res.render("profile", {
-            username
-        })
-    }
-})
-
-app.get('/createTables', async (req, res) => {
-
-    const create_tables = include('database/create_tables');
-
-    var success = create_tables.createTables();
-    if (success) {
-        res.render("successMessage", {
-            message: "Created tables."
-        });
-    } else {
-        res.render("errorMessage", {
-            error: "Failed to create tables."
-        });
-    }
 });
 
 app.post('/loggingin', async (req, res) => {
@@ -246,8 +183,132 @@ app.post('/logout', (req, res) => {
     res.redirect("/");
 });
 
-app.use('/home', sessionValidation);
-app.use('/admin', adminAuthorization);
+app.get('/home', async (req, res) => {
+    // var missingInfo = req.query.missing;
+    user_id = req.session.user_id;
+    username = req.session.username;
+
+    if (!isValidSession(req)) {
+        res.redirect("/");
+    } else {
+        // var resultList = await db_users.getToDoList({
+        //     user_id
+        // });
+
+        console.log("user id " + user_id + " " + username + " has successfully logged in!");
+
+
+        res.render("home", {
+            username
+        });
+
+        // if (resultList) {
+
+        //     res.render("todo", {
+        //         list: resultList,
+        //         username,
+        //         missing: missingInfo
+        //     });
+        // } else {
+        //     res.render("todo", {
+        //         list: "none",
+        //         username,
+        //         missing: missingInfo
+        //     });
+        // }
+    }
+});
+
+app.get('/home/links', (req, res) => {
+    //replace with the links table info
+    var data;
+
+    var option = "links";
+    res.render("home", {
+        option
+    })
+})
+
+app.get('/home/images', (req, res) => {
+    //replace with the images table info
+    var data;
+
+    var option = "images";
+    res.render("home", {
+        option
+    })
+})
+
+app.get('/home/text', (req, res) => {
+    //replace with the text table info
+    var data;
+
+    var option = "text";
+    res.render("home", {
+        option
+    })
+})
+
+app.get('/profile', (req, res) => {
+    username = req.session.username;
+    if (!isValidSession(req)) {
+        res.redirect("/");
+    } else {
+        res.render("profile", {
+            username
+        })
+    }
+})
+
+app.get('/profile/links', (req, res) => {
+    //replace with the users links table info
+    var data;
+
+    var option = "links";
+    res.render("profile", {
+        option
+    })
+})
+
+app.get('/profile/images', (req, res) => {
+    //replace with the users images table info
+    var data;
+
+    var option = "images";
+    res.render("profile", {
+        option
+    })
+})
+
+app.get('/profile/text', (req, res) => {
+    //replace with the users text table info
+    var data;
+
+    var option = "text";
+    res.render("profile", {
+        option
+    })
+})
+
+app.get('/createTables', async (req, res) => {
+
+    const create_tables = include('database/create_tables');
+
+    var success = create_tables.createTables();
+    if (success) {
+        res.render("successMessage", {
+            message: "Created tables."
+        });
+    } else {
+        res.render("errorMessage", {
+            error: "Failed to create tables."
+        });
+    }
+});
+
+
+
+
 
 function isValidSession(req) {
     if (req.session.authenticated) {
@@ -286,6 +347,10 @@ function adminAuthorization(req, res, next) {
     }
 }
 
+app.use('/home', sessionValidation);
+app.use('/profile', sessionValidation);
+
+app.use('/admin', adminAuthorization);
 app.use(express.static("public"));
 app.use(express.static(__dirname + "/public"));
 

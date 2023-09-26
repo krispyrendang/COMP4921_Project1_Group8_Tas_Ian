@@ -2,11 +2,49 @@
 
 <div class="user-info">
     <h1><%= username %></h1>
-    <button>Links</button>
-    <button>Images</button>
-    <button>Text</button>
+</div>
+
+<div class="option-btns">
+    <div class="action-btns">
+        <form action="/profile/links" method="get">
+            <button>Links</button>
+        </form>
+        <form action="/profile/images" method="get">
+            <button>Images</button>
+        </form>
+        <form action="/profile/text" method="get">
+            <button>Text</button>
+        </form>
+    </div>
 </div>
 
 <div class="profile-divider"></div>
+
+<br>
+
+<div class="home-table">
+    <div class="table-info">
+        <table>
+            <tr>
+                <th class="number">#</th>
+                <th>URL</th>
+                <th>Short URL</th>
+                <th>Hits</th>
+                <th>Active</th>
+                <th>Created</th>
+                <th>Last Hit</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>https://url.com/hello/picture/link</td>
+                <td>https://url.com</td>
+                <td>5</td>
+                <td><input type="checkbox"></td>
+                <td>August 21</td>
+                <td>August 22</td>
+            </tr>
+        </table>
+    </div>
+</div>
 
 <%- include("templates/footer") %>

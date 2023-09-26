@@ -2,7 +2,42 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/* index.js */
+.index-page {
+    margin-top: 20%;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.index-logo {
+    box-shadow: 0 4px 8px 0 rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+} 
+
+.index-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.index-btn button {
+    margin: 10px;
+}
+
+
 /* createUser.ejs, login.ejs  */
+.login-create {
+    background-image: url(/photos/home_background.jpg); 
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-position: center center; 
+    background-attachment: fixed;
+}
+
 .info-box {
     width: 100%;
     height: 100%;
@@ -10,7 +45,7 @@ body {
 
 .panel-info {
     width: 400px;
-    height: 205px;
+    height: auto;
     position: absolute;
     top: 47%;
     left: 50%;
@@ -73,8 +108,12 @@ body {
     margin: 0 auto;
 }
 
-.navbar h1 {
+.logo {
     float: left;
+    padding: 10px 0;
+    height: 60px;
+    width: 235px;
+    border-radius: 10px;
 }
 
 header {
@@ -157,6 +196,10 @@ nav button:hover::before  {
     border-radius: 3px;
 }
 
+.action-btns form {
+    display: inline;
+}
+
 .action-btns button:hover {
     background-color: #344e41;
 }
@@ -193,6 +236,12 @@ nav button:hover::before  {
   color: #252422;
 }
 
+.home-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* profile.ejs */
 .user-info {
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
@@ -200,19 +249,6 @@ nav button:hover::before  {
     margin: auto;
     text-align: center;
     font-family: arial;
-}
-
-.user-info button {
-    border: none;
-    outline: 0;
-    display: inline-block;
-    padding: 8px;
-    color: white;
-    background-color: #000;
-    text-align: center;
-    cursor: pointer;
-    width: 97px;
-    font-size: 18px;
 }
 
 .user-info button:hover {
