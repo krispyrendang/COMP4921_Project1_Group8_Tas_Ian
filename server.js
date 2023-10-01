@@ -290,6 +290,10 @@ app.get('/profile/text', (req, res) => {
     })
 })
 
+app.get('/profile/upload', (req, res) => {
+    res.render("upload")
+})
+
 app.get('/createTables', async (req, res) => {
 
     const create_tables = include('database/create_tables');
