@@ -1,0 +1,24 @@
+<%- include("templates/header") %>
+<div class="home-title">
+    <h1>Latest Uploads</h1>
+</div>
+
+<br>
+
+<div class="option-btns">
+    <div class="action-btns">
+        <form action="/home/links" method="get">
+            <button>Links</button>
+        </form>
+        <form action="/home/images" method="get">
+            <button>Images</button>
+        </form>
+        <form action="/home/text" method="get">
+            <button>Text</button>
+        </form>
+    </div>
+</div>
+
+<br>
+
+<%- include("templates/footer") %>

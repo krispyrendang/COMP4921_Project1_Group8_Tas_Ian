@@ -19,6 +19,13 @@ const app = express();
 const expireTime = 60 * 60 * 1000; //expires after 1 hour  (hours * minutes * seconds * millis)
 
 /* secret information section */
+const cloudinary = require('cloudinary');
+cloudinary.config({ 
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+    api_key: process.env.CLOUDINARY_CLOUD_KEY,
+    api_secret: process.env.CLOUDINARY_CLOUD_SECRET
+});
+
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
@@ -223,9 +230,8 @@ app.get('/home/links', (req, res) => {
     //replace with the links table info
     var data;
 
-    var option = "links";
-    res.render("home", {
-        option
+    res.render("home_link", {
+        data
     })
 })
 
@@ -233,9 +239,8 @@ app.get('/home/images', (req, res) => {
     //replace with the images table info
     var data;
 
-    var option = "images";
-    res.render("home", {
-        option
+    res.render("home_image", {
+        data
     })
 })
 
@@ -243,9 +248,8 @@ app.get('/home/text', (req, res) => {
     //replace with the text table info
     var data;
 
-    var option = "text";
-    res.render("home", {
-        option
+    res.render("home_text", {
+        data
     })
 })
 
@@ -264,9 +268,8 @@ app.get('/profile/links', (req, res) => {
     //replace with the users links table info
     var data;
 
-    var option = "links";
-    res.render("profile", {
-        option
+    res.render("profile_link", {
+        data
     })
 })
 
@@ -274,9 +277,8 @@ app.get('/profile/images', (req, res) => {
     //replace with the users images table info
     var data;
 
-    var option = "images";
-    res.render("profile", {
-        option
+    res.render("profile_image", {
+        data
     })
 })
 
@@ -284,9 +286,8 @@ app.get('/profile/text', (req, res) => {
     //replace with the users text table info
     var data;
 
-    var option = "text";
-    res.render("profile", {
-        option
+    res.render("profile_text", {
+        data
     })
 })
 
