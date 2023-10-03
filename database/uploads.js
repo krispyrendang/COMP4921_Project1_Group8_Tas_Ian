@@ -1,7 +1,7 @@
 const database = include('database_connection');
 
-async function imageUpload(postData) {
-    let imageUploadSQL = `
+async function userUpload(postData) {
+    let userUploadSQL = `
         INSERT INTO uploads
         (long, short, desc, type, hits, active, createdDate, lastHitDate, user_id)
         VALUES
@@ -21,76 +21,12 @@ async function imageUpload(postData) {
 	}
 
     try {
-		const results = await database.query(imageUploadSQL, params);
+		const results = await database.query(userUploadSQL, params);
 		console.log("Successfully uploaded image");
 		console.log(results[0]);
 		return true;
 	} catch (err) {
 		console.log("Error uploading image");
-		console.log(err);
-		return false;
-	}
-}
-
-async function textUpload(postData) {
-    let textUploadSQL = `
-        INSERT INTO uploads
-        (long, short, desc, type, hits, active, createdDate, lastHitDate, user_id)
-        VALUES
-        (:long, :short, :desc, :type, :hits, :active, :createdDate, :lastHitDate, :user_id)
-    `
-
-    let params = {
-		long: postData,
-        short: postData,
-        desc: postData,
-        type: postData,
-        hits: postData,
-        active: postData,
-        createdDate: postData,
-        lastHitDate: postData,
-        user_id: postData
-	}
-
-    try {
-		const results = await database.query(textUploadSQL, params);
-		console.log("Successfully uploaded text");
-		console.log(results[0]);
-		return true;
-	} catch (err) {
-		console.log("Error uploading text");
-		console.log(err);
-		return false;
-	}
-}
-
-async function linkUpload(postData) {
-    let linkUploadSQL = `
-        INSERT INTO uploads
-        (long, short, desc, type, hits, active, createdDate, lastHitDate, user_id)
-        VALUES
-        (:long, :short, :desc, :type, :hits, :active, :createdDate, :lastHitDate, :user_id)
-    `
-
-    let params = {
-		long: postData,
-        short: postData,
-        desc: postData,
-        type: postData,
-        hits: postData,
-        active: postData,
-        createdDate: postData,
-        lastHitDate: postData,
-        user_id: postData
-	}
-
-    try {
-		const results = await database.query(linkUploadSQL, params);
-		console.log("Successfully uploaded link");
-		console.log(results[0]);
-		return true;
-	} catch (err) {
-		console.log("Error uploading link");
 		console.log(err);
 		return false;
 	}
@@ -168,12 +104,30 @@ async function getUserLink(postData) {
 	}
 }
 
+async function getAllUploads(postData) {
+    let getAllUploadsSQL = `
+        SELECT *
+        FROM uploads
+    `
+
+    try {
+		const results = await database.query(getAllUploadsSQL);
+		console.log("Successfully got uploads table");
+		console.log(results[0]);
+		return true;
+	} catch (err) {
+		console.log("Error getting uploads table");
+		console.log(err);
+		return false;
+	}
+    
+}
+
 
 module.exports = {
-	imageUpload,
-    textUpload,
-    linkUpload,
+	userUpload,
     getUserImage,
     getUserText,
-    getUserLink
+    getUserLink,
+    getAllUploads
 };
