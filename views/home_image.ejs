@@ -1,4 +1,8 @@
 <%- include("templates/header") %>
+<script type="text/javascript"> 
+    $.cloudinary.config({ cloud_name: '<%= process.env.CLOUDINARY_CLOUD_NAME %>', secure: true});
+</script>
+
 <div class="home-title">
     <h1>Latest Uploads</h1>
 </div>
@@ -21,4 +25,13 @@
 
 <br>
 
+<script>
+    const fileInput = document.querySelector('#picture-upload input[type=file]');
+    fileInput.onchange = () => {
+      if (fileInput.files.length > 0) {
+        const fileName = document.querySelector('#picture-upload .file-name');
+        fileName.textContent = fileInput.files[0].name;
+      }
+    }
+</script>
 <%- include("templates/footer") %>
