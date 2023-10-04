@@ -11,6 +11,7 @@ const database = include("database_connection");
 const db_utils = include("database/db_utils");
 const db_users = include("database/users");
 const db_uploads = include("database/uploads");
+const valid_url = require("valid-url");
 const url = include("database/url");
 const success = db_utils.printMySQLVersion();
 const puny_url = "puny/";
@@ -354,6 +355,17 @@ app.post("/profile/upload/link", async (req, res) => {
 		res.render("upload_status", {
 			status: "Unsuccessful.",
 		});
+	}
+});
+
+//Does not require session validation
+app.get("puny/:code", async (req, res) => {
+	try {
+		var results = await db_uploads.getLongURL({
+			short: req.params.code,
+		});
+	} catch (err) {
+		console.log(err);
 	}
 });
 

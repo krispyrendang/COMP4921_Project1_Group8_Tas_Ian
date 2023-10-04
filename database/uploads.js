@@ -77,6 +77,50 @@ async function getUserUpload(postData) {
 	}
 }
 
+async function getLongURL(postData) {
+	let getLongURLSQL = `
+        SELECT long_url, short_url, active, hits, lastHitDate
+        FROM uploads
+        WHERE short_url = :short_url;
+    `;
+
+	let params = {
+		short_url: postData.short_url,
+	};
+
+	try {
+		const results = await database.query(getLongURLSQL, params);
+		console.log("Successfully got long URL data");
+		return results[0];
+	} catch (err) {
+		console.log("Error getting long URL data");
+		console.log(err);
+		return false;
+	}
+}
+
+// async function updateHits_Date(postData) {
+// 	let updateHits_DateSQL = `
+//         SELECT long_url, short_url, hits, lastHitDate
+//         FROM uploads
+//         WHERE short_url = :short_url;
+//     `;
+
+// 	let params = {
+// 		short_url: postData.short_url,
+// 	};
+
+// 	try {
+// 		const results = await database.query(getLongURL, params);
+// 		console.log("Successfully got long URL data");
+// 		return results[0];
+// 	} catch (err) {
+// 		console.log("Error getting long URL data");
+// 		console.log(err);
+// 		return false;
+// 	}
+// }
+
 async function getAllUpload() {
 	let getAllUploadSQL = `
         SELECT long_url, short_url, hits, active, createdDate, lastHitDate
@@ -122,4 +166,5 @@ module.exports = {
 	getAllUpload,
 	getUserUpload,
 	getAllUploadType,
+	getLongURL,
 };
