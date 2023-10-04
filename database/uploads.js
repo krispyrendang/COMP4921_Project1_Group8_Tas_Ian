@@ -32,7 +32,7 @@ async function userUpload(postData) {
 
 async function getUserUploadType(postData) {
 	let getUserUploadTypeSQL = `
-        SELECT long_url, short_url, hits, active, createdDate, lastHitDate
+        SELECT uploads_id, long_url, short_url, hits, active, createdDate, lastHitDate
         FROM uploads
         JOIN user USING (user_id)
         WHERE user_id = :user_id AND type = :type;
@@ -56,7 +56,7 @@ async function getUserUploadType(postData) {
 
 async function getUserUpload(postData) {
 	let getUserUploadSQL = `
-        SELECT long_url, short_url, hits, active, createdDate, lastHitDate
+        SELECT uploads_id, long_url, short_url, hits, active, createdDate, lastHitDate
         FROM uploads
         JOIN user USING (user_id)
         WHERE user_id = :user_id;
@@ -167,24 +167,49 @@ async function updateActive(postData) {
 	let updateActiveSQL = `
 		UPDATE uploads
 		SET active = :active
-		WHERE upload_id = :upload_id;
+		WHERE uploads_id = :uploads_id;
 	`
 
 	let params = {
 		active: postData.active,
-		upload_id: postData.upload_id
+		uploads_id: postData.uploads_id
 	}
 
 	try {
 		const results = await database.query(updateActiveSQL, params);
-		console.log("Successfully got upload data type");
-		return results[0];
+		console.log("Successfully changed active status");
+		return true;
 	} catch (err) {
-		console.log("Error getting upload data type");
+		console.log("Error changing active status");
 		console.log(err);
 		return false;
 	}
 }
+
+async function getUploadRow(postData) {
+	let getUploadRowSQL = `
+		SELECT active
+		FROM uploads
+		WHERE uploads_id = :uploads_id;
+	`
+
+	let params = {
+		uploads_id: postData.uploads_id
+	}
+
+	try {
+		const results = await database.query(getUploadRowSQL, params);
+		console.log("Successfully changed active status");
+		return results[0];
+	} catch (err) {
+		console.log("Error changing active status");
+		console.log(err);
+		return false;
+	}
+}
+
+
+
 
 module.exports = {
 	userUpload,
@@ -194,5 +219,6 @@ module.exports = {
 	getAllUploadType,
 	getLongURL,
 	updateHits_Date,
-	updateActive
+	updateActive,
+	getUploadRow
 };

@@ -263,6 +263,7 @@ app.get("/profile", async (req, res) => {
 			data,
 		});
 	}
+
 });
 
 app.get("/profile/links", async (req, res) => {
@@ -430,8 +431,26 @@ app.get("/puny/:code", async (req, res) => {
 	}
 });
 
-app.post("/update/active", async (req, res) => {
-	
+app.post("/profile/update/active/:uploads_id", async (req, res) => {
+
+	let data = await db_uploads.getUploadRow({
+		uploads_id: req.params.uploads_id
+	})
+
+	if (data[0].active == 1) {
+		await db_uploads.updateActive({
+			active: 0,
+			uploads_id: req.params.uploads_id
+		})
+		res.redirect("/profile")
+
+	} else {
+		await db_uploads.updateActive({
+			active: 1,
+			uploads_id: req.params.uploads_id
+		})
+		res.redirect("/profile")
+	}
 })
 
 app.get("/createTables", async (req, res) => {

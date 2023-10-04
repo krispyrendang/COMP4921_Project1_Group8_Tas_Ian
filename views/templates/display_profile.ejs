@@ -12,9 +12,13 @@
     <td><%= data.hits %></td>
 
     <% if (data.active == 1) { %>
-        <td> <input type="checkbox" checked name="<%= number + 1 %>"> </td>
+        <form action="/profile/update/active/<%= data.uploads_id %>" method="post">
+            <td> <input type="checkbox" name="checkbox" onchange="this.form.submit()" checked> </td>
+        </form>
     <% } else { %>
-        <td> <input type="checkbox" name="<%= number + 1 %>"> </td>
+        <form action="/profile/update/active/<%= data.uploads_id %>" method="post">
+            <td> <input type="checkbox" name="checkbox" onchange="this.form.submit()"> </td>
+        </form>
     <% } %>
 
     <td><%= data.createdDate %></td>
