@@ -386,6 +386,13 @@ app.post("/profile/upload/link", async (req, res) => {
 	}
 });
 
+app.get("/redirect", (req, res) => {
+	console.log(req.body.longURL);
+	// setTimeout(() => {
+	// 	res.status(301).redirect(req.body.longURL);
+	// }, 3000);
+});
+
 //Does not require session validation
 app.get("/puny/:code", async (req, res) => {
 	try {
@@ -404,18 +411,17 @@ app.get("/puny/:code", async (req, res) => {
 					uploads_id: uploads_id,
 					curr_date: curr_date,
 				});
-				res.render("redirect", {
+
+				res.redirect("redirect", {
 					status: "ACTIVE",
 					timer: 3,
 					longURL: long_url,
 				});
-				// setTimeout(() => {
-				// 	res.redirect(long_url);
-				// }, 3000);
+				// res.redirect("/redirect");
+
 				setTimeout(() => {
-					console.log("redirecting!");
+					location.replace(longURL);
 				}, 3000);
-				res.redirect(long_url);
 			} else {
 				res.render("inactive");
 				setTimeout(() => {
