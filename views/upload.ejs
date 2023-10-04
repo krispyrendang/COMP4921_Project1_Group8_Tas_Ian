@@ -9,7 +9,9 @@
 <br>
 
 <form action="/profile/upload/link" method="post" class="link">
-    
+    <label for="long_url" class="sr-only">Url</label>
+    <input required placeholder="Paste Full Link Here" type="url" name="long_url" id="long_url" class="form-control col mr-2">
+    <button class="btn btn-success" type="submit">Save Link</button>
 </form>
 
 <form action="/profile/upload/image" method="post" enctype="multipart/form-data" class="image">
