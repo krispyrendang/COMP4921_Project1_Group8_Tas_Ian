@@ -1,0 +1,10 @@
+<%- include("templates/header") %>
+<script type="text/javascript"> 
+    $.cloudinary.config({ cloud_name: '<%= process.env.CLOUDINARY_CLOUD_NAME %>', secure: true});
+</script>
+
+<div class="display-image">
+    <script type="text/javascript">document.write($.cloudinary.imageTag('<%- image_uuid %>', {height: 500, width: 500, crop: "fit"}).toHtml());</script>
+</div>
+
+<%- include("templates/footer") %>

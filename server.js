@@ -34,6 +34,8 @@ const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
+const {v4: uuid} = require('uuid');
+
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
@@ -315,7 +317,9 @@ app.get("/profile/upload", (req, res) => {
 });
 
 app.post("/profile/upload/image", upload.single("image"), async (req, res) => {
-	let image_uuid = uuid();
+	let short = url.url_code();
+	let short_url = puny_url + short;
+	let curr_date = new Date().toDateString();
 	let buf64 = req.file.buffer.toString("base64");
 	user_id = req.session.user_id;
 
@@ -324,11 +328,36 @@ app.post("/profile/upload/image", upload.single("image"), async (req, res) => {
 		async (result) => {
 			try {
 				console.log(result);
-			} catch (err) {}
+
+				let long_url = base_url + `/image/${result.public_id}`
+
+				const success = await db_uploads.userUpload ({
+					long: long_url,
+					short: short_url,
+					desc: "image",
+					type: 2,
+					createdDate: curr_date,
+					user_id: user_id,
+				})
+
+				if (!success) {
+					console.log("Error inserting image data")
+				} else {
+					res.redirect("/profile");
+				}
+
+			} catch (err) {
+				console.log(err)
+			}
 		}
 	);
-	res.redirect("/profile");
 });
+
+app.get("/image/:image_uuid", (req, res) => {
+	res.render("image", {
+		image_uuid: req.params.image_uuid
+	})
+})
 
 app.post("/profile/upload/link", async (req, res) => {
 	let long_url = req.body.long_url;

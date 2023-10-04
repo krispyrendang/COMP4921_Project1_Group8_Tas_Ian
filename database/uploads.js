@@ -102,7 +102,7 @@ async function getAllUploadType(postData) {
     `;
 
 	let params = {
-		type: postData,
+		type: postData.type,
 	};
 
 	try {
