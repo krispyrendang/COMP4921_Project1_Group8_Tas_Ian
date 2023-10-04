@@ -14,7 +14,7 @@ const db_uploads = include("database/uploads");
 const valid_url = require("valid-url");
 const url = include("database/url");
 const success = db_utils.printMySQLVersion();
-const puny_url = "puny/";
+// const puny_url = "puny/";
 const base_url = "https://mcjxbrvtkd.us18.qoddiapp.com"; //hosted site
 
 const port = process.env.PORT || 8080;
@@ -362,13 +362,12 @@ app.get("/image/:image_uuid", (req, res) => {
 app.post("/profile/upload/link", async (req, res) => {
 	let long_url = req.body.long_url;
 	let user_id = req.session.user_id;
-	let short_url = url.url_code();
-	let short = puny_url + short_url;
+	let short_url = base_url + "/" + url.url_code();
 	let curr_date = new Date().toDateString();
 
 	var results = await db_uploads.userUpload({
 		long: long_url,
-		short: short,
+		short: short_url,
 		desc: "link",
 		type: 1,
 		createdDate: curr_date,
@@ -394,7 +393,7 @@ app.get("/redirect", (req, res) => {
 });
 
 //Does not require session validation
-app.get("/puny/:code", async (req, res) => {
+app.get("/:code", async (req, res) => {
 	try {
 		var results = await db_uploads.getLongURL({
 			short_url: "puny/" + req.params.code,
@@ -436,9 +435,7 @@ app.get("/puny/:code", async (req, res) => {
 	}
 });
 
-app.post("/update/active", async (req, res) => {
-	
-})
+app.post("/update/active", async (req, res) => {});
 
 app.get("/createTables", async (req, res) => {
 	const create_tables = include("database/create_tables");
