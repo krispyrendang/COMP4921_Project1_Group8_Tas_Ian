@@ -199,55 +199,44 @@ app.get('/home', async (req, res) => {
     if (!isValidSession(req)) {
         res.redirect("/");
     } else {
-        // var resultList = await db_users.getToDoList({
-        //     user_id
-        // });
-
         console.log("user id " + user_id + " " + username + " has successfully logged in!");
-
+        var data = await db_uploads.getAllUpload()
 
         res.render("home", {
-            username
+            username,
+            data
         });
 
-        // if (resultList) {
-
-        //     res.render("todo", {
-        //         list: resultList,
-        //         username,
-        //         missing: missingInfo
-        //     });
-        // } else {
-        //     res.render("todo", {
-        //         list: "none",
-        //         username,
-        //         missing: missingInfo
-        //     });
-        // }
     }
 });
 
-app.get('/home/links', (req, res) => {
+app.get('/home/links', async (req, res) => {
     //replace with the links table info
-    var data;
+    var data = await db_uploads.getAllUploadType({
+        type: 1
+    })
 
     res.render("home_link", {
         data
     })
 })
 
-app.get('/home/images', (req, res) => {
+app.get('/home/images', async (req, res) => {
     //replace with the images table info
-    var data;
+    var data = await db_uploads.getAllUploadType({
+        type: 2
+    })
 
     res.render("home_image", {
         data
     })
 })
 
-app.get('/home/text', (req, res) => {
+app.get('/home/text', async (req, res) => {
     //replace with the text table info
-    var data;
+    var data = await db_uploads.getAllUploadType({
+        type: 3
+    })
 
     res.render("home_text", {
         data
