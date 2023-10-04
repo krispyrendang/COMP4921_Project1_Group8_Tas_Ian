@@ -406,7 +406,7 @@ app.get("/:code", async (req, res) => {
 				let uploads_id = results[0].uploads_id;
 				let curr_date = new Date().toDateString();
 
-				var update = await db_uploads.updateHits_Date({
+				await db_uploads.updateHits_Date({
 					uploads_id: uploads_id,
 					curr_date: curr_date,
 				});
