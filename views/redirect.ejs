@@ -1,12 +1,6 @@
 <%- include("templates/header") %> 
 <div class="redirect">
     <h1>Link is <%= status %>!</h1>
-    <h3>Redirecting in <%= timer %> seconds to <a href=<%= longURL %>></a></h3>
+    <h3>Redirecting in <%= timer %> seconds to <%= longURL %></h3>
 </div>
-<script>
-    setTimeout(() => {
-		window.location.replace(longURL);
-		// res.status(301).redirect(req.body.longURL);
-	}, 3000);
-</script>
 <%- include("templates/footer") %> 

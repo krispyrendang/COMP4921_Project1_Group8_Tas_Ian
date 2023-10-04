@@ -387,6 +387,7 @@ app.post("/profile/upload/link", async (req, res) => {
 
 app.get("/redirect", (req, res) => {
 	console.log(req.body.longURL);
+	console.log(req.body.longURL);
 
 	setTimeout(() => {
 		window.location.replace(req.body.longURL);
