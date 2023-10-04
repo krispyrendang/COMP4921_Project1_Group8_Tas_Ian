@@ -10,6 +10,7 @@ const saltRounds = 12;
 const database = include('database_connection');
 const db_utils = include('database/db_utils');
 const db_users = include('database/users');
+const db_uploads = include('database/uploads');
 const success = db_utils.printMySQLVersion();
 
 const port = process.env.PORT || 3000;
@@ -253,39 +254,62 @@ app.get('/home/text', (req, res) => {
     })
 })
 
-app.get('/profile', (req, res) => {
+app.get('/profile', async (req, res) => {
     username = req.session.username;
+    user_id = req.session.user_id;
+    
+    var data = await db_uploads.getUserUpload({
+        user_id: user_id
+    })
+
     if (!isValidSession(req)) {
         res.redirect("/");
     } else {
         res.render("profile", {
-            username
+            username,
+            data
         })
     }
 })
 
-app.get('/profile/links', (req, res) => {
+app.get('/profile/links', async (req, res) => {
+    user_id = req.session.user_id
+
     //replace with the users links table info
-    var data;
+    var data = await db_uploads.getUserUploadType({
+        type: 1,
+        user_id: user_id
+    });
 
     res.render("profile_link", {
         data
     })
 })
 
-app.get('/profile/images', (req, res) => {
+app.get('/profile/images', async (req, res) => {
+    user_id = req.session.user_id
+
     //replace with the users images table info
-    var data;
+    var data = await db_uploads.getUserUploadType({
+        type: 2,
+        user_id: user_id
+    })
+
 
     res.render("profile_image", {
         data
     })
 })
 
-app.get('/profile/text', (req, res) => {
-    //replace with the users text table info
-    var data;
+app.get('/profile/text', async (req, res) => {
+    user_id = req.session.user_id
 
+    //replace with the users text table info
+    var data = await db_uploads.getUserUploadType({
+        type: 3,
+        user_id: user_id
+    });
+    
     res.render("profile_text", {
         data
     })

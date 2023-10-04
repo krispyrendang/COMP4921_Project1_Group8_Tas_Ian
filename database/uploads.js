@@ -3,9 +3,9 @@ const database = include('database_connection');
 async function userUpload(postData) {
     let userUploadSQL = `
         INSERT INTO uploads
-        (long, short, desc, type, hits, active, createdDate, lastHitDate, user_id)
+        (long_url, short_url, description, type, active, createdDate, lastHitDate, user_id)
         VALUES
-        (:long, :short, :desc, :type, :hits, :active, :createdDate, :lastHitDate, :user_id)
+        (:long, :short, :desc, :type, :active, :createdDate, :lastHitDate, :user_id);
     `
 
     let params = {
@@ -32,102 +32,98 @@ async function userUpload(postData) {
 	}
 }
 
-async function getUserImage(postData) {
-    let getUserImageSQL = `
-        SELECT long, short, desc
-        FROM uploads
-        WHERE user_id = :user_id AND type = :type
-    `
-
-    let params = {
-		type: postData,
-        user_id: postData
-	}
-
-    try {
-		const results = await database.query(getUserImageSQL, params);
-		console.log("Successfully got user image data");
-		console.log(results[0]);
-		return true;
-	} catch (err) {
-		console.log("Error getting user image data");
-		console.log(err);
-		return false;
-	}
-}
-
-async function getUserText(postData) {
-    let getUserTextSQL = `
-        SELECT long, short, desc
-        FROM uploads
-        WHERE user_id = :user_id AND type = :type
-    `
-
-    let params = {
-		type: postData,
-        user_id: postData
-	}
-
-    try {
-		const results = await database.query(getUserTextSQL, params);
-		console.log("Successfully got user text data");
-		console.log(results[0]);
-		return true;
-	} catch (err) {
-		console.log("Error getting user text data");
-		console.log(err);
-		return false;
-	}
-}
-
-async function getUserLink(postData) {
-    let getUserLinkSQL = `
-        SELECT long, short, desc
-        FROM uploads
-        WHERE user_id = :user_id AND type = :type
-    `
-
-    let params = {
-		type: postData,
-        user_id: postData
-	}
-
-    try {
-		const results = await database.query(getUserLinkSQL, params);
-		console.log("Successfully got user link data");
-		console.log(results[0]);
-		return true;
-	} catch (err) {
-		console.log("Error getting user link data");
-		console.log(err);
-		return false;
-	}
-}
-
-async function getAllUploads(postData) {
-    let getAllUploadsSQL = `
+async function getUserUploadType(postData) {
+    let getUserUploadTypeSQL = `
         SELECT *
         FROM uploads
+        JOIN user USING (user_id)
+        WHERE user_id = :user_id AND type = :type;
+    `
+
+    let params = {
+		type: postData.type,
+        user_id: postData.user_id
+	}
+
+    try {
+		const results = await database.query(getUserUploadTypeSQL, params);
+		console.log("Successfully got user upload data type");
+		return results[0];
+	} catch (err) {
+		console.log("Error getting user upload data type");
+		console.log(err);
+		return false;
+	}
+}
+
+async function getUserUpload(postData) {
+    let getUserUploadSQL = `
+        SELECT *
+        FROM uploads
+        JOIN user USING (user_id)
+        WHERE user_id = :user_id;
+    `
+
+    let params = {
+        user_id: postData.user_id
+    }
+
+    try {
+		const results = await database.query(getUserUploadSQL, params);
+		console.log("Successfully got user uploads data");
+        return results[0];
+	} catch (err) {
+		console.log("Error getting user uploads data");
+		console.log(err);
+		return false;
+	}   
+}
+
+async function getAllUpload() {
+    let getAllUploadSQL = `
+        SELECT *
+        FROM uploads;
     `
 
     try {
-		const results = await database.query(getAllUploadsSQL);
+		const results = await database.query(getAllUploadSQL);
 		console.log("Successfully got uploads table");
-		console.log(results[0]);
-		return true;
+        return results[0];
 	} catch (err) {
 		console.log("Error getting uploads table");
 		console.log(err);
 		return false;
-	}
-    
+	}   
 }
+
+async function getAllUploadType(postData) {
+    let getAllUploadTypeSQL = `
+        SELECT *
+        FROM uploads
+        WHERE type = :type;
+    `
+
+    let params = {
+        type: postData
+    }
+
+    try {
+		const results = await database.query(getAllUploadTypeSQL, params);
+		console.log("Successfully got upload data type");
+        return results[0];
+	} catch (err) {
+		console.log("Error getting upload data type");
+		console.log(err);
+		return false;
+	}   
+}
+
 
 
 module.exports = {
 	userUpload,
-    getUserImage,
-    getUserText,
-    getUserLink,
-    getAllUploads
+    getUserUploadType,
+    getAllUpload,
+    getUserUpload,
+    getAllUploadType
 };
