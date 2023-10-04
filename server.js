@@ -308,6 +308,32 @@ app.get('/profile/upload', (req, res) => {
     res.render("upload")
 })
 
+app.post('/profile/upload/image', upload.single('image'), async (req, res) => {
+
+    let image_uuid = uuid()
+    let buf64 = req.file.buffer.toString('base64')
+    user_id = req.session.user_id
+
+    stream = cloudinary.uploader.upload("data:image/octet-stream;base64," + buf64, async (result) => {
+        try {
+            console.log(result)
+
+        } catch (err) {
+            
+        }
+    })
+
+
+
+
+
+
+
+
+
+    res.redirect("/profile")
+})
+
 app.get('/createTables', async (req, res) => {
 
     const create_tables = include('database/create_tables');
