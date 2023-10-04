@@ -389,7 +389,8 @@ app.get("/redirect", (req, res) => {
 	console.log(req.body.longURL);
 
 	setTimeout(() => {
-		res.status(301).redirect(req.body.longURL);
+		window.location.replace(req.body.longURL);
+		// res.status(301).redirect(req.body.longURL);
 	}, 3000);
 });
 
