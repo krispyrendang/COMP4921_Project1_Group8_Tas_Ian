@@ -14,9 +14,9 @@ const db_uploads = include("database/uploads");
 const url = include("database/url");
 const success = db_utils.printMySQLVersion();
 const puny_url = "puny/";
-const base_url = ""; //hosted site
+const base_url = "https://mcjxbrvtkd.us18.qoddiapp.com"; //hosted site
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
 
 const app = express();
 
@@ -30,9 +30,9 @@ cloudinary.config({
 	api_secret: process.env.CLOUDINARY_CLOUD_SECRET,
 });
 
-const multer  = require('multer')
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage })
+const multer = require("multer");
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
@@ -194,7 +194,7 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/home", async (req, res) => {
-	username = req.session.username
+	username = req.session.username;
 	user_id = req.session.user_id;
 
 	if (!isValidSession(req)) {
@@ -206,7 +206,7 @@ app.get("/home", async (req, res) => {
 		var data = await db_uploads.getAllUpload();
 
 		res.render("home", {
-			data
+			data,
 		});
 	}
 });
@@ -217,120 +217,118 @@ app.get("/home/links", async (req, res) => {
 		type: 1,
 	});
 
-    res.render("home_link", {
-        data
-    })
-})
+	res.render("home_link", {
+		data,
+	});
+});
 
-app.get('/home/images', async (req, res) => {
-    //replace with the images table info
-    var data = await db_uploads.getAllUploadType({
-        type: 2
-    })
+app.get("/home/images", async (req, res) => {
+	//replace with the images table info
+	var data = await db_uploads.getAllUploadType({
+		type: 2,
+	});
 
-    res.render("home_image", {
-        data
-    })
-})
+	res.render("home_image", {
+		data,
+	});
+});
 
-app.get('/home/text', async (req, res) => {
-    //replace with the text table info
-    var data = await db_uploads.getAllUploadType({
-        type: 3
-    })
+app.get("/home/text", async (req, res) => {
+	//replace with the text table info
+	var data = await db_uploads.getAllUploadType({
+		type: 3,
+	});
 
-    res.render("home_text", {
-        data
-    })
-})
+	res.render("home_text", {
+		data,
+	});
+});
 
-app.get('/profile', async (req, res) => {
-    username = req.session.username;
-    user_id = req.session.user_id;
-    
-    var data = await db_uploads.getUserUpload({
-        user_id: user_id
-    })
-
-    if (!isValidSession(req)) {
-        res.redirect("/");
-    } else {
-        res.render("profile", {
-            username,
-            data
-        })
-    }
-})
-
-app.get('/profile/links', async (req, res) => {
+app.get("/profile", async (req, res) => {
 	username = req.session.username;
-    user_id = req.session.user_id
+	user_id = req.session.user_id;
 
-    //replace with the users links table info
-    var data = await db_uploads.getUserUploadType({
-        type: 1,
-        user_id: user_id
-    });
+	var data = await db_uploads.getUserUpload({
+		user_id: user_id,
+	});
 
-    res.render("profile_link", {
-		username,
-        data
-    })
-})
+	if (!isValidSession(req)) {
+		res.redirect("/");
+	} else {
+		res.render("profile", {
+			username,
+			data,
+		});
+	}
+});
 
-app.get('/profile/images', async (req, res) => {
+app.get("/profile/links", async (req, res) => {
 	username = req.session.username;
-    user_id = req.session.user_id
+	user_id = req.session.user_id;
 
-    //replace with the users images table info
-    var data = await db_uploads.getUserUploadType({
-        type: 2,
-        user_id: user_id
-    })
+	//replace with the users links table info
+	var data = await db_uploads.getUserUploadType({
+		type: 1,
+		user_id: user_id,
+	});
 
-
-    res.render("profile_image", {
+	res.render("profile_link", {
 		username,
-        data
-    })
-})
+		data,
+	});
+});
 
-app.get('/profile/text', async (req, res) => {
+app.get("/profile/images", async (req, res) => {
 	username = req.session.username;
-    user_id = req.session.user_id
+	user_id = req.session.user_id;
 
-    //replace with the users text table info
-    var data = await db_uploads.getUserUploadType({
-        type: 3,
-        user_id: user_id
-    });
-    
-    res.render("profile_text", {
+	//replace with the users images table info
+	var data = await db_uploads.getUserUploadType({
+		type: 2,
+		user_id: user_id,
+	});
+
+	res.render("profile_image", {
 		username,
-        data
-    })
-})
+		data,
+	});
+});
 
-app.get('/profile/upload', (req, res) => {
-    res.render("upload")
-})
+app.get("/profile/text", async (req, res) => {
+	username = req.session.username;
+	user_id = req.session.user_id;
 
-app.post('/profile/upload/image', upload.single('image'), async (req, res) => {
+	//replace with the users text table info
+	var data = await db_uploads.getUserUploadType({
+		type: 3,
+		user_id: user_id,
+	});
 
-    let image_uuid = uuid()
-    let buf64 = req.file.buffer.toString('base64')
-    user_id = req.session.user_id
+	res.render("profile_text", {
+		username,
+		data,
+	});
+});
 
-    stream = cloudinary.uploader.upload("data:image/octet-stream;base64," + buf64, async (result) => {
-        try {
-            console.log(result)
+app.get("/profile/upload", (req, res) => {
+	res.render("upload");
+});
 
-        } catch (err) {
-            
-        }
-    })
-    res.redirect("/profile")
-})
+app.post("/profile/upload/image", upload.single("image"), async (req, res) => {
+	let image_uuid = uuid();
+	let buf64 = req.file.buffer.toString("base64");
+	user_id = req.session.user_id;
+
+	stream = cloudinary.uploader.upload(
+		"data:image/octet-stream;base64," + buf64,
+		async (result) => {
+			try {
+				console.log(result);
+			} catch (err) {}
+		}
+	);
+	res.redirect("/profile");
+});
 
 app.post("/profile/upload/link", async (req, res) => {
 	let long_url = req.body.long_url;
@@ -359,20 +357,19 @@ app.post("/profile/upload/link", async (req, res) => {
 	}
 });
 
-app.get('/createTables', async (req, res) => {
+app.get("/createTables", async (req, res) => {
+	const create_tables = include("database/create_tables");
 
-    const create_tables = include('database/create_tables');
-
-    var success = create_tables.createTables();
-    if (success) {
-        res.render("successMessage", {
-            message: "Created tables."
-        });
-    } else {
-        res.render("errorMessage", {
-            error: "Failed to create tables."
-        });
-    }
+	var success = create_tables.createTables();
+	if (success) {
+		res.render("successMessage", {
+			message: "Created tables.",
+		});
+	} else {
+		res.render("errorMessage", {
+			error: "Failed to create tables.",
+		});
+	}
 	res.render("home_link", {
 		data,
 	});
