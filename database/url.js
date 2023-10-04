@@ -1,4 +1,3 @@
-const database = include("database_connection");
 const base62_str = [
 	"0",
 	"1",
@@ -65,7 +64,7 @@ const base62_str = [
 ];
 
 //Creates a random number between 1 million (4 char codeword) to 100 billion (7 char codeword), inclusive.
-function shortKey() {
+function url_code() {
 	let key = Math.floor(Math.random() * 1000000000) + 1000000;
 	let hash_str = base62_encode(key);
 
@@ -83,5 +82,5 @@ function base62_encode(key) {
 }
 
 module.exports = {
-	shortKey,
+	url_code,
 };
