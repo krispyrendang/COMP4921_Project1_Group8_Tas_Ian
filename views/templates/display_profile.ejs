@@ -1,0 +1,22 @@
+<tr>
+    <td><%= number + 1 %></td>
+
+    <% if (data.active == 1) { %>
+        <td class="URL"><a href="<%= data.long_url %>"><%= data.long_url %></a></td>
+        <td><a href="<%= data.short_url %>"><%= data.short_url %></a></td>
+    <% } else { %>
+        <td class="URL"><%= data.long_url %></td>
+        <td><%= data.short_url %></td>
+    <% } %>
+
+    <td><%= data.hits %></td>
+
+    <% if (data.active == 1) { %>
+        <td> <input type="checkbox" checked name="<%= number + 1 %>"> </td>
+    <% } else { %>
+        <td> <input type="checkbox" name="<%= number + 1 %>"> </td>
+    <% } %>
+
+    <td><%= data.createdDate %></td>
+    <td><%= data.lastHitDate %></td>
+</tr>

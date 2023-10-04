@@ -436,6 +436,10 @@ app.get("/puny/:code", async (req, res) => {
 	}
 });
 
+app.post("/update/active", async (req, res) => {
+	
+})
+
 app.get("/createTables", async (req, res) => {
 	const create_tables = include("database/create_tables");
 

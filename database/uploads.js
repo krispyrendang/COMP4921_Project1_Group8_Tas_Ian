@@ -163,6 +163,29 @@ async function getAllUploadType(postData) {
 	}
 }
 
+async function updateActive(postData) {
+	let updateActiveSQL = `
+		UPDATE uploads
+		SET active = :active
+		WHERE upload_id = :upload_id;
+	`
+
+	let params = {
+		active: postData.active,
+		upload_id: postData.upload_id
+	}
+
+	try {
+		const results = await database.query(updateActiveSQL, params);
+		console.log("Successfully got upload data type");
+		return results[0];
+	} catch (err) {
+		console.log("Error getting upload data type");
+		console.log(err);
+		return false;
+	}
+}
+
 module.exports = {
 	userUpload,
 	getUserUploadType,
@@ -171,4 +194,5 @@ module.exports = {
 	getAllUploadType,
 	getLongURL,
 	updateHits_Date,
+	updateActive
 };
