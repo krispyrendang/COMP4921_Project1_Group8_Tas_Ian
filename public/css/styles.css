@@ -308,3 +308,10 @@ nav button:hover::before  {
     margin-left: 12.5%;
     padding: 10px;
 }
+
+/* image.ejs */
+.display-image {
+    display: flex;
+    justify-content: center;
+    align-self: center;
+}
