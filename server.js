@@ -30,6 +30,10 @@ cloudinary.config({
 	api_secret: process.env.CLOUDINARY_CLOUD_SECRET,
 });
 
+const multer  = require('multer')
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
+
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
 const mongodb_session_secret = process.env.MONGODB_SESSION_SECRET;
@@ -321,122 +325,8 @@ app.post('/profile/upload/image', upload.single('image'), async (req, res) => {
             
         }
     })
-
-
-
-
-
-
-
-
-
     res.redirect("/profile")
 })
-
-app.get('/createTables', async (req, res) => {
-
-    const create_tables = include('database/create_tables');
-
-    var success = create_tables.createTables();
-    if (success) {
-        res.render("successMessage", {
-            message: "Created tables."
-        });
-    } else {
-        res.render("errorMessage", {
-            error: "Failed to create tables."
-        });
-    }
-	res.render("home_link", {
-		data,
-	});
-});
-
-app.get("/home/images", async (req, res) => {
-	//replace with the images table info
-	var data = await db_uploads.getAllUploadType({
-		type: 2,
-	});
-
-	res.render("home_image", {
-		data,
-	});
-});
-
-app.get("/home/text", async (req, res) => {
-	//replace with the text table info
-	var data = await db_uploads.getAllUploadType({
-		type: 3,
-	});
-
-	res.render("home_text", {
-		data,
-	});
-});
-
-app.get("/profile", async (req, res) => {
-	username = req.session.username;
-	user_id = req.session.user_id;
-
-	var data = await db_uploads.getUserUpload({
-		user_id: user_id,
-	});
-
-	if (!isValidSession(req)) {
-		res.redirect("/");
-	} else {
-		res.render("profile", {
-			username,
-			data,
-		});
-	}
-});
-
-app.get("/profile/links", async (req, res) => {
-	user_id = req.session.user_id;
-
-	//replace with the users links table info
-	var data = await db_uploads.getUserUploadType({
-		type: 1,
-		user_id: user_id,
-	});
-
-	res.render("profile_link", {
-		data,
-	});
-});
-
-app.get("/profile/images", async (req, res) => {
-	user_id = req.session.user_id;
-
-	//replace with the users images table info
-	var data = await db_uploads.getUserUploadType({
-		type: 2,
-		user_id: user_id,
-	});
-
-	res.render("profile_image", {
-		data,
-	});
-});
-
-app.get("/profile/text", async (req, res) => {
-	user_id = req.session.user_id;
-
-	//replace with the users text table info
-	var data = await db_uploads.getUserUploadType({
-		type: 3,
-		user_id: user_id,
-	});
-
-	res.render("profile_text", {
-		data,
-	});
-});
-
-app.get("/profile/upload", (req, res) => {
-	res.render("upload");
-});
 
 app.post("/profile/upload/link", async (req, res) => {
 	let long_url = req.body.long_url;
@@ -465,19 +355,23 @@ app.post("/profile/upload/link", async (req, res) => {
 	}
 });
 
-app.get("/createTables", async (req, res) => {
-	const create_tables = include("database/create_tables");
+app.get('/createTables', async (req, res) => {
 
-	var success = create_tables.createTables();
-	if (success) {
-		res.render("successMessage", {
-			message: "Created tables.",
-		});
-	} else {
-		res.render("errorMessage", {
-			error: "Failed to create tables.",
-		});
-	}
+    const create_tables = include('database/create_tables');
+
+    var success = create_tables.createTables();
+    if (success) {
+        res.render("successMessage", {
+            message: "Created tables."
+        });
+    } else {
+        res.render("errorMessage", {
+            error: "Failed to create tables."
+        });
+    }
+	res.render("home_link", {
+		data,
+	});
 });
 
 function isValidSession(req) {
