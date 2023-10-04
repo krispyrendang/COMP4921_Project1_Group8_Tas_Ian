@@ -204,6 +204,7 @@ nav button:hover::before  {
     background-color: #344e41;
 }
 
+/* table for upload info */
 .home-table {
     display: flex;
     justify-content: center;
@@ -235,6 +236,14 @@ nav button:hover::before  {
   background-color: #ccc5b9;
   color: #252422;
 }
+
+.URL {
+    max-width: 450px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+/* table for upload info */
 
 .home-title {
     display: flex;

@@ -32,7 +32,7 @@ async function userUpload(postData) {
 
 async function getUserUploadType(postData) {
 	let getUserUploadTypeSQL = `
-        SELECT *
+        SELECT long_url, short_url, hits, active, createdDate, lastHitDate
         FROM uploads
         JOIN user USING (user_id)
         WHERE user_id = :user_id AND type = :type;
@@ -56,7 +56,7 @@ async function getUserUploadType(postData) {
 
 async function getUserUpload(postData) {
 	let getUserUploadSQL = `
-        SELECT *
+        SELECT long_url, short_url, hits, active, createdDate, lastHitDate
         FROM uploads
         JOIN user USING (user_id)
         WHERE user_id = :user_id;
@@ -79,7 +79,7 @@ async function getUserUpload(postData) {
 
 async function getAllUpload() {
 	let getAllUploadSQL = `
-        SELECT *
+        SELECT long_url, short_url, hits, active, createdDate, lastHitDate
         FROM uploads;
     `;
 
@@ -96,7 +96,7 @@ async function getAllUpload() {
 
 async function getAllUploadType(postData) {
 	let getAllUploadTypeSQL = `
-        SELECT *
+        SELECT long_url, short_url, hits, active, createdDate, lastHitDate
         FROM uploads
         WHERE type = :type;
     `;

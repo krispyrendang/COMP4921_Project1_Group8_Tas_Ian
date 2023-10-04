@@ -194,9 +194,8 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/home", async (req, res) => {
-	// var missingInfo = req.query.missing;
+	username = req.session.username
 	user_id = req.session.user_id;
-	username = req.session.username;
 
 	if (!isValidSession(req)) {
 		res.redirect("/");
@@ -207,8 +206,7 @@ app.get("/home", async (req, res) => {
 		var data = await db_uploads.getAllUpload();
 
 		res.render("home", {
-			username,
-			data,
+			data
 		});
 	}
 });
@@ -265,6 +263,7 @@ app.get('/profile', async (req, res) => {
 })
 
 app.get('/profile/links', async (req, res) => {
+	username = req.session.username;
     user_id = req.session.user_id
 
     //replace with the users links table info
@@ -274,11 +273,13 @@ app.get('/profile/links', async (req, res) => {
     });
 
     res.render("profile_link", {
+		username,
         data
     })
 })
 
 app.get('/profile/images', async (req, res) => {
+	username = req.session.username;
     user_id = req.session.user_id
 
     //replace with the users images table info
@@ -289,11 +290,13 @@ app.get('/profile/images', async (req, res) => {
 
 
     res.render("profile_image", {
+		username,
         data
     })
 })
 
 app.get('/profile/text', async (req, res) => {
+	username = req.session.username;
     user_id = req.session.user_id
 
     //replace with the users text table info
@@ -303,6 +306,7 @@ app.get('/profile/text', async (req, res) => {
     });
     
     res.render("profile_text", {
+		username,
         data
     })
 })
