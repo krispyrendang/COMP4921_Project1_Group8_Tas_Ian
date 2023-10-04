@@ -81,3 +81,7 @@ function base62_encode(key) {
 	}
 	return hash_str;
 }
+
+module.exports = {
+	shortKey,
+};
