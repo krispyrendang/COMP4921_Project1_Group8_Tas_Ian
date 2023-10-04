@@ -32,20 +32,18 @@
                 <th>URL</th>
                 <th>Short URL</th>
                 <th>Hits</th>
-                <th>Active</th>
                 <th>Created</th>
                 <th>Last Hit</th>
             </tr>
             <% let i=0 %>
             <% for (i = 0; i < data.length; i++) { %>
-                <%- include('templates/display', {data: data[i], number: i})  %> 
+                <%- include('templates/display_home', {data: data[i], number: i})  %> 
             <% } %>
             <tr>
                 <td>1</td>
                 <td>https://url.com/hello/picture/link</td>
                 <td>https://url.com</td>
                 <td>5</td>
-                <td><input type="checkbox"></td>
                 <td>August 21</td>
                 <td>August 22</td>
             </tr>
