@@ -387,9 +387,10 @@ app.post("/profile/upload/link", async (req, res) => {
 
 app.get("/redirect", (req, res) => {
 	console.log(req.body.longURL);
-	// setTimeout(() => {
-	// 	res.status(301).redirect(req.body.longURL);
-	// }, 3000);
+
+	setTimeout(() => {
+		res.status(301).redirect(req.body.longURL);
+	}, 3000);
 });
 
 //Does not require session validation
