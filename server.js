@@ -396,10 +396,10 @@ app.get("/redirect", (req, res) => {
 app.get("/:code", async (req, res) => {
 	try {
 		var results = await db_uploads.getLongURL({
-			short_url: "puny/" + req.params.code,
+			short_url: base_url + "/" + req.params.code,
 		});
 
-		if (results[0]) {
+		if (results) {
 			console.log("results.active: " + results[0].active);
 			if (results[0].active == 1) {
 				let long_url = results[0].long_url;
@@ -418,14 +418,14 @@ app.get("/:code", async (req, res) => {
 				});
 				// res.redirect("/redirect");
 
-				setTimeout(() => {
-					location.replace(longURL);
-				}, 3000);
+				// setTimeout(() => {
+				// 	location.replace(longURL);
+				// }, 3000);
 			} else {
 				res.render("inactive");
-				setTimeout(() => {
-					res.redirect("/profile");
-				}, 3000);
+				// setTimeout(() => {
+				// 	res.redirect("/profile");
+				// }, 3000);
 			}
 		} else {
 			res.render("404");
