@@ -35,7 +35,7 @@ const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-const {v4: uuid} = require('uuid');
+const { v4: uuid } = require("uuid");
 
 const mongodb_user = process.env.MONGODB_USER;
 const mongodb_password = process.env.MONGODB_PASSWORD;
@@ -330,25 +330,24 @@ app.post("/profile/upload/image", upload.single("image"), async (req, res) => {
 			try {
 				console.log(result);
 
-				let long_url = base_url + `/image/${result.public_id}`
+				let long_url = base_url + `/image/${result.public_id}`;
 
-				const success = await db_uploads.userUpload ({
+				const success = await db_uploads.userUpload({
 					long: long_url,
 					short: short_url,
 					desc: "image",
 					type: 2,
 					createdDate: curr_date,
 					user_id: user_id,
-				})
+				});
 
 				if (!success) {
-					console.log("Error inserting image data")
+					console.log("Error inserting image data");
 				} else {
 					res.redirect("/profile");
 				}
-
 			} catch (err) {
-				console.log(err)
+				console.log(err);
 			}
 		}
 	);
@@ -356,9 +355,9 @@ app.post("/profile/upload/image", upload.single("image"), async (req, res) => {
 
 app.get("/image/:image_uuid", (req, res) => {
 	res.render("image", {
-		image_uuid: req.params.image_uuid
-	})
-})
+		image_uuid: req.params.image_uuid,
+	});
+});
 
 app.post("/profile/upload/link", async (req, res) => {
 	let long_url = req.body.long_url;
@@ -388,11 +387,44 @@ app.post("/profile/upload/link", async (req, res) => {
 });
 
 //Does not require session validation
-app.get("puny/:code", async (req, res) => {
+app.get("/puny/:code", async (req, res) => {
 	try {
 		var results = await db_uploads.getLongURL({
-			short: req.params.code,
+			short_url: "puny/" + req.params.code,
 		});
+
+		if (results[0]) {
+			console.log("results.active: " + results[0].active);
+			if (results[0].active == 1) {
+				let long_url = results[0].long_url;
+				let uploads_id = results[0].uploads_id;
+				let curr_date = new Date().toDateString();
+
+				var update = await db_uploads.updateHits_Date({
+					uploads_id: uploads_id,
+					curr_date: curr_date,
+				});
+				res.render("redirect", {
+					status: "ACTIVE",
+					timer: 3,
+					longURL: long_url,
+				});
+				// setTimeout(() => {
+				// 	res.redirect(long_url);
+				// }, 3000);
+				setTimeout(() => {
+					console.log("redirecting!");
+				}, 3000);
+				res.redirect(long_url);
+			} else {
+				res.render("inactive");
+				setTimeout(() => {
+					res.redirect("/profile");
+				}, 3000);
+			}
+		} else {
+			res.render("404");
+		}
 	} catch (err) {
 		console.log(err);
 	}

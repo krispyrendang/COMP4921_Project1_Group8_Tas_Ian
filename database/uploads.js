@@ -79,7 +79,7 @@ async function getUserUpload(postData) {
 
 async function getLongURL(postData) {
 	let getLongURLSQL = `
-        SELECT long_url, short_url, active, hits, lastHitDate
+        SELECT uploads_id, long_url, active
         FROM uploads
         WHERE short_url = :short_url;
     `;
@@ -99,27 +99,30 @@ async function getLongURL(postData) {
 	}
 }
 
-// async function updateHits_Date(postData) {
-// 	let updateHits_DateSQL = `
-//         SELECT long_url, short_url, hits, lastHitDate
-//         FROM uploads
-//         WHERE short_url = :short_url;
-//     `;
+async function updateHits_Date(postData) {
+	let updateHits_DateSQL = `
+	update uploads
+	set hits = hits + 1,
+	lastHitDate = :date
+	where uploads_id = :uploads_id;
+    `;
 
-// 	let params = {
-// 		short_url: postData.short_url,
-// 	};
+	let params = {
+		date: postData.curr_date,
+		uploads_id: postData.uploads_id,
+	};
 
-// 	try {
-// 		const results = await database.query(getLongURL, params);
-// 		console.log("Successfully got long URL data");
-// 		return results[0];
-// 	} catch (err) {
-// 		console.log("Error getting long URL data");
-// 		console.log(err);
-// 		return false;
-// 	}
-// }
+	try {
+		const results = await database.query(updateHits_DateSQL, params);
+		console.log("Successfully updated hits and last accessed date");
+		console.log(results[0]);
+		return true;
+	} catch (err) {
+		console.log("Error updating hits and last accessed date");
+		console.log(err);
+		return false;
+	}
+}
 
 async function getAllUpload() {
 	let getAllUploadSQL = `
@@ -167,4 +170,5 @@ module.exports = {
 	getUserUpload,
 	getAllUploadType,
 	getLongURL,
+	updateHits_Date,
 };
