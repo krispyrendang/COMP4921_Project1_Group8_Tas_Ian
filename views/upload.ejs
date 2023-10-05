@@ -9,15 +9,17 @@
 <br>
 
 <form action="/profile/upload/link" method="post" class="link">
+    <h3>Upload a link</h3>
     <label for="long_url" class="sr-only">Url</label>
-    <input required placeholder="Paste Full Link Here" type="url" name="long_url" id="long_url" class="form-control col mr-2">
+    <input required placeholder="Paste Full Link Here" type="url" name="long_url" id="long_url" class="long_url">
     <button class="btn btn-success" type="submit">Save Link</button>
 </form>
 
 <br>
 
 <form action="/profile/upload/image" method="post" enctype="multipart/form-data" class="image">
-    <div>
+    <h3>Upload an image</h3>
+    <div class="file-button">
         <label>
             <input class="file-input" type="file" name="image"/>
         </label>
@@ -34,8 +36,9 @@
 <br>
 
 <form action="/profile/upload/text" method="post" class="text">
+    <h3>Upload some text</h3>
     <label for="text" class="sr-only">Text</label>
-    <textarea required placeholder="Enter Text Here" name="desc" id="desc" cols="30" rows="10"></textarea>
+    <textarea required placeholder="Enter Text Here" name="desc" id="desc" cols="30" rows="10" class="text-area"></textarea>
     <button class="btn btn-success" type="submit">Save Text</button>
 </form>
 

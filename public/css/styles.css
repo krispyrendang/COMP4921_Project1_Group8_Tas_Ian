@@ -309,9 +309,31 @@ nav button:hover::before  {
     padding: 10px;
 }
 
+.text-area {
+    width: 1430px;
+    margin-bottom: 5px;
+}
+
 /* image.ejs */
+.display-image {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    margin: auto;
+}
+
 .display-image {
     display: flex;
     justify-content: center;
     align-self: center;
+}
+
+/* view_text.ejs */
+.desc {
+    padding: 5px;
+}
+
+.desc-area {
+    border: dotted black 1px;
+    width: 75%;
+    margin-left: 12.5%;
+    padding: 10px;
 }
