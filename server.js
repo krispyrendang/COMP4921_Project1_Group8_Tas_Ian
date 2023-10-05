@@ -190,6 +190,7 @@ app.get("/home", async (req, res) => {
 
 		res.render("home", {
 			data,
+			base_url,
 		});
 	}
 });
@@ -206,6 +207,7 @@ app.get("/home/links", async (req, res) => {
 
 		res.render("home_link", {
 			data,
+			base_url,
 		});
 	}
 });
@@ -222,6 +224,7 @@ app.get("/home/images", async (req, res) => {
 
 		res.render("home_image", {
 			data,
+			base_url,
 		});
 	}
 });
@@ -238,6 +241,7 @@ app.get("/home/text", async (req, res) => {
 
 		res.render("home_text", {
 			data,
+			base_url,
 		});
 	}
 });
@@ -256,6 +260,7 @@ app.get("/profile", async (req, res) => {
 		res.render("profile", {
 			username,
 			data,
+			base_url,
 		});
 	}
 });
@@ -277,6 +282,7 @@ app.get("/profile/links", async (req, res) => {
 		res.render("profile_link", {
 			username,
 			data,
+			base_url,
 		});
 	}
 });
@@ -298,6 +304,7 @@ app.get("/profile/images", async (req, res) => {
 		res.render("profile_image", {
 			username,
 			data,
+			base_url,
 		});
 	}
 });
@@ -319,6 +326,7 @@ app.get("/profile/text", async (req, res) => {
 		res.render("profile_text", {
 			username,
 			data,
+			base_url,
 		});
 	}
 });
@@ -345,7 +353,7 @@ app.post("/profile/upload/text", async (req, res) => {
 
 		var results = await db_uploads.userUpload({
 			long: long_url,
-			short: short_url,
+			short: long_url,
 			desc: text,
 			type: 3,
 			createdDate: curr_date,

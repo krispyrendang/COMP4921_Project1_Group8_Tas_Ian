@@ -3,7 +3,7 @@
 
     <% if (data.active == 1) { %>
         <td class="URL"><a href="<%= data.long_url %>"><%= data.long_url %></a></td>
-        <td><a href="<%= data.short_url %>"><%= data.short_url %></a></td>
+        <td><a href="<%= data.short_url %>"><%= base_url + '/' + data.short_url %></a></td>
     <% } else { %>
         <td class="URL"><%= data.long_url %></td>
         <td><%= data.short_url %></td>
