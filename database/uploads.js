@@ -126,8 +126,10 @@ async function updateHits_Date(postData) {
 
 async function getAllUpload() {
 	let getAllUploadSQL = `
-        SELECT long_url, short_url, hits, active, createdDate, lastHitDate
-        FROM uploads;
+	select long_url, short_url, hits, createdDate, lastHitDate
+	from uploads
+	order by hits desc
+	limit 30;
     `;
 
 	try {
@@ -143,10 +145,12 @@ async function getAllUpload() {
 
 async function getAllUploadType(postData) {
 	let getAllUploadTypeSQL = `
-        SELECT long_url, short_url, hits, active, createdDate, lastHitDate
-        FROM uploads
-        WHERE type = :type;
-    `;
+		select long_url, short_url, hits, createdDate, lastHitDate
+		from uploads
+		WHERE type = :type
+		order by hits desc
+		limit 30;
+    	`;
 
 	let params = {
 		type: postData.type,
@@ -240,5 +244,5 @@ module.exports = {
 	updateHits_Date,
 	updateActive,
 	getUploadRow,
-	getImageRow
+	getImageRow,
 };
