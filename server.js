@@ -176,74 +176,53 @@ app.post("/logout", (req, res) => {
 	res.redirect("/");
 });
 
-//requires session auth
+//does not require session auth - public
 app.get("/home", async (req, res) => {
-	if (!isValidSession(req)) {
-		res.redirect("/");
-	} else {
-		username = req.session.username;
-		user_id = req.session.user_id;
-		console.log(
-			"user id " + user_id + " " + username + " has successfully logged in!"
-		);
-		var data = await db_uploads.getAllUpload();
+	var data = await db_uploads.getAllUpload();
 
-		res.render("home", {
-			data,
-			base_url,
-		});
-	}
+	res.render("home", {
+		data,
+		base_url,
+	});
 });
 
-//requires session auth
+//does not require session auth - public
 app.get("/home/links", async (req, res) => {
-	if (!isValidSession(req)) {
-		res.redirect("/");
-	} else {
-		//replace with the links table info
-		var data = await db_uploads.getAllUploadType({
-			type: 1,
-		});
+	//replace with the links table info
+	var data = await db_uploads.getAllUploadType({
+		type: 1,
+	});
 
-		res.render("home_link", {
-			data,
-			base_url,
-		});
-	}
+	res.render("home_link", {
+		data,
+		base_url,
+	});
 });
 
-//requires session auth
+//does not require session auth - public
 app.get("/home/images", async (req, res) => {
-	if (!isValidSession(req)) {
-		res.redirect("/");
-	} else {
-		//replace with the images table info
-		var data = await db_uploads.getAllUploadType({
-			type: 2,
-		});
+	//replace with the images table info
+	var data = await db_uploads.getAllUploadType({
+		type: 2,
+	});
 
-		res.render("home_image", {
-			data,
-			base_url,
-		});
-	}
+	res.render("home_image", {
+		data,
+		base_url,
+	});
 });
 
-//requires session auth
+//does not require session auth - public
 app.get("/home/text", async (req, res) => {
-	if (!isValidSession(req)) {
-		res.redirect("/");
-	} else {
-		//replace with the text table info
-		var data = await db_uploads.getAllUploadType({
-			type: 3,
-		});
+	//replace with the text table info
+	var data = await db_uploads.getAllUploadType({
+		type: 3,
+	});
 
-		res.render("home_text", {
-			data,
-			base_url,
-		});
-	}
+	res.render("home_text", {
+		data,
+		base_url,
+	});
 });
 
 //requires session auth
@@ -582,7 +561,6 @@ function sessionValidation(req, res, next) {
 	}
 }
 
-app.use("/home", sessionValidation);
 app.use("/profile", sessionValidation);
 
 app.use(express.static("public"));
