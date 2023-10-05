@@ -490,7 +490,7 @@ app.get("/:code", async (req, res) => {
 			short_url: req.params.code,
 		});
 
-		console.log(results[0]);
+		console.log("RESULTS FROM DB: " + results[0]);
 
 		if (results[0]) {
 			console.log("results.active: " + results[0].active);
@@ -499,7 +499,7 @@ app.get("/:code", async (req, res) => {
 			if (results[0].active == 1) {
 				let long_url = results[0].long_url;
 				let uploads_id = results[0].uploads_id;
-				let desc = results[0].desc;
+				let desc = results[0].description;
 				let curr_date = new Date().toDateString();
 
 				await db_uploads.updateHits_Date({
