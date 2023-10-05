@@ -79,7 +79,7 @@ async function getUserUpload(postData) {
 
 async function getLongURL(postData) {
 	let getLongURLSQL = `
-        SELECT uploads_id, long_url, active, type
+        SELECT uploads_id, long_url, active, description
         FROM uploads
         WHERE short_url = :short_url;
     `;
