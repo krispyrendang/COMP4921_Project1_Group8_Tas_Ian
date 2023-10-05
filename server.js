@@ -14,7 +14,6 @@ const db_uploads = include("database/uploads");
 const valid_url = require("valid-url");
 const url = include("database/url");
 const success = db_utils.printMySQLVersion();
-// const puny_url = "puny/";
 const base_url = "https://mcjxbrvtkd.us18.qoddiapp.com"; //hosted site
 
 const port = process.env.PORT || 8080;
@@ -123,20 +122,6 @@ app.post("/submitUser", async (req, res) => {
 	}
 });
 
-app.get("/admin", async (req, res) => {
-	username = req.session.username;
-	var results = await db_users.getUsers();
-
-	if (!isAdmin(req)) {
-		res.redirect("/");
-	} else {
-		res.render("admin", {
-			users: results,
-			username,
-		});
-	}
-});
-
 app.get("/login", (req, res) => {
 	res.render("login", {
 		error: "none",
@@ -144,50 +129,56 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/loggingin", async (req, res) => {
-	var email = req.body.email;
-	var password = req.body.password;
+	if (!isValidSession(req)) {
+		res.redirect("/");
+	} else {
+		var email = req.body.email;
+		var password = req.body.password;
 
-	var results = await db_users.getUser({
-		email: email,
-		hashedPassword: password,
-	});
+		var results = await db_users.getUser({
+			email: email,
+			hashedPassword: password,
+		});
 
-	if (results) {
-		if (results.length == 1) {
-			//there should only be 1 user in the db that matches
-			if (bcrypt.compareSync(password, results[0].hashedPassword)) {
-				req.session.authenticated = true;
-				req.session.user_type = results[0].user_type;
-				req.session.username = results[0].username;
-				req.session.user_id = results[0].user_id;
-				req.session.cookie.maxAge = expireTime;
+		if (results) {
+			if (results.length == 1) {
+				//there should only be 1 user in the db that matches
+				if (bcrypt.compareSync(password, results[0].hashedPassword)) {
+					req.session.authenticated = true;
+					req.session.user_type = results[0].user_type;
+					req.session.username = results[0].username;
+					req.session.user_id = results[0].user_id;
+					req.session.cookie.maxAge = expireTime;
 
-				if (!isAdmin(req)) {
-					res.redirect("/home");
+					if (!isAdmin(req)) {
+						res.redirect("/home");
+					} else {
+						res.redirect("/admin");
+					}
+
+					return;
 				} else {
-					res.redirect("/admin");
+					console.log("invalid password");
 				}
-
-				return;
 			} else {
-				console.log("invalid password");
+				console.log(
+					"invalid number of users matched: " +
+						results.length +
+						" (expected 1)."
+				);
+				res.render("login", {
+					error: "User and password not found.",
+				});
+				return;
 			}
-		} else {
-			console.log(
-				"invalid number of users matched: " + results.length + " (expected 1)."
-			);
-			res.render("login", {
-				error: "User and password not found.",
-			});
-			return;
 		}
-	}
 
-	console.log("user not found");
-	//user and password combination not found
-	res.render("login", {
-		error: "User and password not found.",
-	});
+		console.log("user not found");
+		//user and password combination not found
+		res.render("login", {
+			error: "User and password not found.",
+		});
+	}
 });
 
 app.post("/logout", (req, res) => {
@@ -196,13 +187,13 @@ app.post("/logout", (req, res) => {
 	res.redirect("/");
 });
 
+//requires session auth
 app.get("/home", async (req, res) => {
-	username = req.session.username;
-	user_id = req.session.user_id;
-
 	if (!isValidSession(req)) {
 		res.redirect("/");
 	} else {
+		username = req.session.username;
+		user_id = req.session.user_id;
 		console.log(
 			"user id " + user_id + " " + username + " has successfully logged in!"
 		);
@@ -214,50 +205,65 @@ app.get("/home", async (req, res) => {
 	}
 });
 
+//requires session auth
 app.get("/home/links", async (req, res) => {
-	//replace with the links table info
-	var data = await db_uploads.getAllUploadType({
-		type: 1,
-	});
-
-	res.render("home_link", {
-		data,
-	});
-});
-
-app.get("/home/images", async (req, res) => {
-	//replace with the images table info
-	var data = await db_uploads.getAllUploadType({
-		type: 2,
-	});
-
-	res.render("home_image", {
-		data,
-	});
-});
-
-app.get("/home/text", async (req, res) => {
-	//replace with the text table info
-	var data = await db_uploads.getAllUploadType({
-		type: 3,
-	});
-
-	res.render("home_text", {
-		data,
-	});
-});
-
-app.get("/profile", async (req, res) => {
-	username = req.session.username;
-	user_id = req.session.user_id;
-
-	var data = await db_uploads.getUserUpload({
-		user_id: user_id,
-	});
-
 	if (!isValidSession(req)) {
 		res.redirect("/");
 	} else {
+		//replace with the links table info
+		var data = await db_uploads.getAllUploadType({
+			type: 1,
+		});
+
+		res.render("home_link", {
+			data,
+		});
+	}
+});
+
+//requires session auth
+app.get("/home/images", async (req, res) => {
+	if (!isValidSession(req)) {
+		res.redirect("/");
+	} else {
+		//replace with the images table info
+		var data = await db_uploads.getAllUploadType({
+			type: 2,
+		});
+
+		res.render("home_image", {
+			data,
+		});
+	}
+});
+
+//requires session auth
+app.get("/home/text", async (req, res) => {
+	if (!isValidSession(req)) {
+		res.redirect("/");
+	} else {
+		//replace with the text table info
+		var data = await db_uploads.getAllUploadType({
+			type: 3,
+		});
+
+		res.render("home_text", {
+			data,
+		});
+	}
+});
+
+//requires session auth
+app.get("/profile", async (req, res) => {
+	if (!isValidSession(req)) {
+		res.redirect("/");
+	} else {
+		username = req.session.username;
+		user_id = req.session.user_id;
+
+		var data = await db_uploads.getUserUpload({
+			user_id: user_id,
+		});
 		res.render("profile", {
 			username,
 			data,
@@ -265,184 +271,214 @@ app.get("/profile", async (req, res) => {
 	}
 });
 
+//requires session auth
 app.get("/profile/links", async (req, res) => {
-	username = req.session.username;
-	user_id = req.session.user_id;
-
-	//replace with the users links table info
-	var data = await db_uploads.getUserUploadType({
-		type: 1,
-		user_id: user_id,
-	});
-
-	res.render("profile_link", {
-		username,
-		data,
-	});
-});
-
-app.get("/profile/images", async (req, res) => {
-	username = req.session.username;
-	user_id = req.session.user_id;
-
-	//replace with the users images table info
-	var data = await db_uploads.getUserUploadType({
-		type: 2,
-		user_id: user_id,
-	});
-
-	res.render("profile_image", {
-		username,
-		data,
-	});
-});
-
-app.get("/profile/text", async (req, res) => {
-	username = req.session.username;
-	user_id = req.session.user_id;
-
-	//replace with the users text table info
-	var data = await db_uploads.getUserUploadType({
-		type: 3,
-		user_id: user_id,
-	});
-
-	res.render("profile_text", {
-		username,
-		data,
-	});
-});
-
-app.get("/profile/upload", (req, res) => {
-	res.render("upload");
-});
-
-app.post("/profile/upload/text", async (req, res) => {
-	let text = req.body.desc;
-	let user_id = req.session.user_id;
-	let short_url = url.url_code();
-	let long_url = base_url + "/text/" + short_url;
-	let curr_date = new Date().toDateString();
-
-	var results = await db_uploads.userUpload({
-		long: long_url,
-		short: short_url,
-		desc: text,
-		type: 3,
-		createdDate: curr_date,
-		user_id: user_id,
-	});
-
-	if (results) {
-		res.render("upload_status", {
-			status: "Successful",
-		});
+	if (!isValidSession(req)) {
+		res.redirect("/");
 	} else {
-		res.render("upload_status", {
-			status: "Unsuccessful.",
+		username = req.session.username;
+		user_id = req.session.user_id;
+
+		//replace with the users links table info
+		var data = await db_uploads.getUserUploadType({
+			type: 1,
+			user_id: user_id,
+		});
+
+		res.render("profile_link", {
+			username,
+			data,
 		});
 	}
 });
 
-app.post("/profile/upload/image", upload.single("image"), async (req, res) => {
-	let short = url.url_code();
-	let curr_date = new Date().toDateString();
-	let buf64 = req.file.buffer.toString("base64");
-	user_id = req.session.user_id;
+//requires session auth
+app.get("/profile/images", async (req, res) => {
+	if (!isValidSession(req)) {
+		res.redirect("/");
+	} else {
+		username = req.session.username;
+		user_id = req.session.user_id;
 
-	stream = cloudinary.uploader.upload(
-		"data:image/octet-stream;base64," + buf64,
-		async (result) => {
-			try {
-				console.log(result);
+		//replace with the users images table info
+		var data = await db_uploads.getUserUploadType({
+			type: 2,
+			user_id: user_id,
+		});
 
-				let long_url = base_url + `/image/${result.public_id}`;
-
-				const success = await db_uploads.userUpload({
-					long: long_url,
-					short: short,
-					desc: "image",
-					type: 2,
-					createdDate: curr_date,
-					user_id: user_id,
-				});
-
-				if (!success) {
-					console.log("Error inserting image data");
-				} else {
-					res.redirect("/profile");
-				}
-			} catch (err) {
-				console.log(err);
-			}
-		}
-	);
+		res.render("profile_image", {
+			username,
+			data,
+		});
+	}
 });
 
-app.get("/image/:image_uuid", (req, res) => {
+//requires session auth
+app.get("/profile/text", async (req, res) => {
+	if (!isValidSession(req)) {
+		res.redirect("/");
+	} else {
+		username = req.session.username;
+		user_id = req.session.user_id;
 
+		//replace with the users text table info
+		var data = await db_uploads.getUserUploadType({
+			type: 3,
+			user_id: user_id,
+		});
+
+		res.render("profile_text", {
+			username,
+			data,
+		});
+	}
+});
+
+//requires session auth
+app.get("/profile/upload", (req, res) => {
+	if (!isValidSession(req)) {
+		res.redirect("/");
+	} else {
+		res.render("upload");
+	}
+});
+
+//requires session auth
+app.post("/profile/upload/text", async (req, res) => {
+	if (!isValidSession(req)) {
+		res.redirect("/");
+	} else {
+		let text = req.body.desc;
+		let user_id = req.session.user_id;
+		let short_url = url.url_code();
+		let long_url = base_url + "/text/" + short_url;
+		let curr_date = new Date().toDateString();
+
+		var results = await db_uploads.userUpload({
+			long: long_url,
+			short: short_url,
+			desc: text,
+			type: 3,
+			createdDate: curr_date,
+			user_id: user_id,
+		});
+
+		if (results) {
+			res.render("upload_status", {
+				status: "Successful",
+			});
+		} else {
+			res.render("upload_status", {
+				status: "Unsuccessful.",
+			});
+		}
+	}
+});
+
+//requires session auth
+app.post("/profile/upload/image", upload.single("image"), async (req, res) => {
+	if (!isValidSession(req)) {
+		res.redirect("/");
+	} else {
+		let short = url.url_code();
+		let curr_date = new Date().toDateString();
+		let buf64 = req.file.buffer.toString("base64");
+		user_id = req.session.user_id;
+
+		stream = cloudinary.uploader.upload(
+			"data:image/octet-stream;base64," + buf64,
+			async (result) => {
+				try {
+					console.log(result);
+
+					let long_url = base_url + `/image/${result.public_id}`;
+
+					const success = await db_uploads.userUpload({
+						long: long_url,
+						short: short,
+						desc: "image",
+						type: 2,
+						createdDate: curr_date,
+						user_id: user_id,
+					});
+
+					if (success) {
+						res.render("upload_status", {
+							status: "Successful",
+						});
+					} else {
+						res.render("upload_status", {
+							status: "Unsuccessful.",
+						});
+					}
+				} catch (err) {
+					console.log(err);
+					res.render("upload_status", {
+						status: "Unsuccessful.",
+					});
+				}
+			}
+		);
+	}
+});
+
+//does not require session auth
+app.get("/image/:image_uuid", (req, res) => {
 	let status = db_uploads.getImageRow({
-		long_url: base_url + "/image/" + req.params.image_uuid
-	})
+		long_url: base_url + "/image/" + req.params.image_uuid,
+	});
 
 	if (status[0]) {
 		if (status[0].active == 1) {
 			res.render("image", {
-				image_uuid: req.params.image_uuid
+				image_uuid: req.params.image_uuid,
 			});
 		} else {
-			res.render("redirect")
+			res.render("redirect");
 		}
 	} else {
-		res.render("404")
+		res.render("404");
 	}
 });
 
+//requires session auth
 app.post("/profile/upload/link", async (req, res) => {
-	let long_url = req.body.long_url;
-	let user_id = req.session.user_id;
-	let short_url = url.url_code();
-	let curr_date = new Date().toDateString();
-
-	var results = await db_uploads.userUpload({
-		long: long_url,
-		short: short_url,
-		desc: "link",
-		type: 1,
-		createdDate: curr_date,
-		user_id: user_id,
-	});
-
-	if (results) {
-		res.render("upload_status", {
-			status: "Successful",
-		});
+	if (!isValidSession(req)) {
+		res.redirect("/");
 	} else {
-		res.render("upload_status", {
-			status: "Unsuccessful.",
+		let long_url = req.body.long_url;
+		if (!valid_url.isUri(long_url)) {
+			res.render("upload_status", {
+				status: "Unsuccessful - Invalid URL.",
+			});
+		}
+
+		let user_id = req.session.user_id;
+		let short_url = url.url_code();
+		let curr_date = new Date().toDateString();
+
+		var results = await db_uploads.userUpload({
+			long: long_url,
+			short: short_url,
+			desc: "link",
+			type: 1,
+			createdDate: curr_date,
+			user_id: user_id,
 		});
+
+		if (results) {
+			res.render("upload_status", {
+				status: "Successful",
+			});
+		} else {
+			res.render("upload_status", {
+				status: "Unsuccessful.",
+			});
+		}
 	}
 });
 
-// app.get("/redirect", (req, res) => {
-// 	console.log(req.body.long_url);
-
-// 	setTimeout(() => {
-// 		window.location.replace(req.body.long_url);
-// 		// res.redirect(req.body.long_url);
-// 	}, 3000);
-// });
-
-// app.get("/text/redirect", (req, res) => {
-// 	console.log("/text/redirect req.body.desc: " + req.body.desc);
-// 	let desc = req.body.desc;
-// 	setTimeout(() => {
-// 		res.render("view_text", {
-// 			desc: desc,
-// 		});
-// 	}, 3000);
-// });
-
+//Does not require session authentication
 app.get("/text/:code", async (req, res) => {
 	try {
 		var results = await db_uploads.getLongURL({
@@ -450,11 +486,8 @@ app.get("/text/:code", async (req, res) => {
 		});
 
 		if (results[0]) {
-			console.log("results.active: " + results[0].active);
-
 			//if short_url is active
 			if (results[0].active == 1) {
-				// let long_url = results[0].long_url;
 				let uploads_id = results[0].uploads_id;
 				let desc = results[0].description;
 				let curr_date = new Date().toDateString();
@@ -467,7 +500,7 @@ app.get("/text/:code", async (req, res) => {
 					text: desc,
 				});
 			} else {
-				res.render("inactive");
+				res.render("inactive"); //redirects to inform user that short_url is inactive
 			}
 		} else {
 			res.render("404");
@@ -477,37 +510,39 @@ app.get("/text/:code", async (req, res) => {
 	}
 });
 
+//requires session auth
 app.post("/profile/update/active/:uploads_id", async (req, res) => {
-	let data = await db_uploads.getUploadRow({
-		uploads_id: req.params.uploads_id,
-	});
-
-	if (data[0].active == 1) {
-		await db_uploads.updateActive({
-			active: 0,
-			uploads_id: req.params.uploads_id,
-		});
-		res.redirect("/profile");
+	if (!isValidSession(req)) {
+		res.redirect("/");
 	} else {
-		await db_uploads.updateActive({
-			active: 1,
+		let data = await db_uploads.getUploadRow({
 			uploads_id: req.params.uploads_id,
 		});
-		res.redirect("/profile");
+
+		if (data[0].active == 1) {
+			await db_uploads.updateActive({
+				active: 0,
+				uploads_id: req.params.uploads_id,
+			});
+			res.redirect("/profile");
+		} else {
+			await db_uploads.updateActive({
+				active: 1,
+				uploads_id: req.params.uploads_id,
+			});
+			res.redirect("/profile");
+		}
 	}
 });
 
+//Does not require session authentication
 app.get("/:code", async (req, res) => {
 	try {
 		var results = await db_uploads.getLongURL({
 			short_url: req.params.code,
 		});
 
-		console.log("RESULTS FROM DB: " + results[0]);
-
 		if (results[0]) {
-			console.log("results.active: " + results[0].active);
-
 			//if short_url is active
 			if (results[0].active == 1) {
 				let long_url = results[0].long_url;
@@ -521,7 +556,7 @@ app.get("/:code", async (req, res) => {
 				});
 				res.redirect(long_url); //redirect to respective long_url for each type of upload
 			} else {
-				res.render("inactive");
+				res.render("inactive"); //redirects to inform user that short_url is inactive
 			}
 		} else {
 			res.render("404");
@@ -529,24 +564,6 @@ app.get("/:code", async (req, res) => {
 	} catch (err) {
 		console.log(err);
 	}
-});
-
-app.get("/createTables", async (req, res) => {
-	const create_tables = include("database/create_tables");
-
-	var success = create_tables.createTables();
-	if (success) {
-		res.render("successMessage", {
-			message: "Created tables.",
-		});
-	} else {
-		res.render("errorMessage", {
-			error: "Failed to create tables.",
-		});
-	}
-	res.render("home_link", {
-		data,
-	});
 });
 
 function isValidSession(req) {
@@ -566,29 +583,9 @@ function sessionValidation(req, res, next) {
 	}
 }
 
-function isAdmin(req) {
-	if (req.session.user_type == "admin") {
-		return true;
-	}
-	return false;
-}
-
-function adminAuthorization(req, res, next) {
-	if (!isAdmin(req)) {
-		res.status(403);
-		res.render("errorMessage", {
-			error: "Not Authorized",
-		});
-		return;
-	} else {
-		next();
-	}
-}
-
 app.use("/home", sessionValidation);
 app.use("/profile", sessionValidation);
 
-app.use("/admin", adminAuthorization);
 app.use(express.static("public"));
 app.use(express.static(__dirname + "/public"));
 
