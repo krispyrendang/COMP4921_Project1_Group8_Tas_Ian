@@ -420,10 +420,12 @@ app.post("/profile/upload/image", upload.single("image"), async (req, res) => {
 });
 
 //does not require session auth
-app.get("/image/:image_uuid", (req, res) => {
-	let status = db_uploads.getImageRow({
+app.get("/image/:image_uuid", async (req, res) => {
+	let status = await db_uploads.getImageRow({
 		long_url: base_url + "/image/" + req.params.image_uuid,
 	});
+
+	console.log(status);
 
 	if (status[0]) {
 		if (status[0].active == 1) {
