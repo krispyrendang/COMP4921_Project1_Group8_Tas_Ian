@@ -413,7 +413,7 @@ app.get("/:code", async (req, res) => {
 					curr_date: curr_date,
 				});
 
-				res.redirect("/redirect", {
+				res.redirect(301, "/redirect", {
 					status: "ACTIVE",
 					timer: 3,
 					longURL: long_url,
