@@ -14,7 +14,7 @@ const db_uploads = include("database/uploads");
 const valid_url = require("valid-url");
 const url = include("database/url");
 const success = db_utils.printMySQLVersion();
-const puny_url = "puny/";
+// const puny_url = "puny/";
 const base_url = "https://mcjxbrvtkd.us18.qoddiapp.com"; //hosted site
 
 const port = process.env.PORT || 8080;
@@ -363,13 +363,12 @@ app.get("/image/:image_uuid", (req, res) => {
 app.post("/profile/upload/link", async (req, res) => {
 	let long_url = req.body.long_url;
 	let user_id = req.session.user_id;
-	let short_url = url.url_code();
-	let short = puny_url + short_url;
+	let short_url = base_url + "/" + url.url_code();
 	let curr_date = new Date().toDateString();
 
 	var results = await db_uploads.userUpload({
 		long: long_url,
-		short: short,
+		short: short_url,
 		desc: "link",
 		type: 1,
 		createdDate: curr_date,
@@ -387,41 +386,49 @@ app.post("/profile/upload/link", async (req, res) => {
 	}
 });
 
+app.get("/redirect", (req, res) => {
+	console.log(req.body.long_url);
+
+	setTimeout(() => {
+		window.location.replace(req.body.long_url);
+		// res.redirect(req.body.long_url);
+	}, 3000);
+});
+
 //Does not require session validation
-app.get("/puny/:code", async (req, res) => {
+app.get("/:code", async (req, res) => {
 	try {
 		var results = await db_uploads.getLongURL({
-			short_url: "puny/" + req.params.code,
+			short_url: base_url + "/" + req.params.code,
 		});
 
-		if (results[0]) {
+		if (results) {
 			console.log("results.active: " + results[0].active);
 			if (results[0].active == 1) {
 				let long_url = results[0].long_url;
 				let uploads_id = results[0].uploads_id;
 				let curr_date = new Date().toDateString();
 
-				var update = await db_uploads.updateHits_Date({
+				await db_uploads.updateHits_Date({
 					uploads_id: uploads_id,
 					curr_date: curr_date,
 				});
-				res.render("redirect", {
+
+				res.redirect("/redirect", {
 					status: "ACTIVE",
 					timer: 3,
 					longURL: long_url,
 				});
+				// res.redirect("/redirect");
+
 				// setTimeout(() => {
-				// 	res.redirect(long_url);
+				// 	location.replace(longURL);
 				// }, 3000);
-				setTimeout(() => {
-					console.log("redirecting!");
-				}, 3000);
-				res.redirect(long_url);
 			} else {
 				res.render("inactive");
-				setTimeout(() => {
-					res.redirect("/profile");
-				}, 3000);
+				// setTimeout(() => {
+				// 	res.redirect("/profile");
+				// }, 3000);
 			}
 		} else {
 			res.render("404");
