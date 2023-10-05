@@ -147,13 +147,8 @@ app.post("/loggingin", async (req, res) => {
 				req.session.user_id = results[0].user_id;
 				req.session.cookie.maxAge = expireTime;
 
-				if (!isAdmin(req)) {
-					res.redirect("/home");
-				} else {
-					res.redirect("/admin");
-				}
-
-				return;
+				res.redirect("/home");
+				// return;
 			} else {
 				console.log("invalid password");
 			}
