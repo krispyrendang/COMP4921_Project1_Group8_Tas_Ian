@@ -34,7 +34,9 @@
 <br>
 
 <form action="/profile/upload/text" method="post" class="text">
-    
+    <label for="text" class="sr-only">Text</label>
+    <textarea required placeholder="Enter Text Here" name="desc" id="desc" cols="30" rows="10"></textarea>
+    <button class="btn btn-success" type="submit">Save Text</button>
 </form>
 
 <%- include("templates/footer") %>

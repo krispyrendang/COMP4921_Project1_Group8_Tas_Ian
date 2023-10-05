@@ -263,7 +263,6 @@ app.get("/profile", async (req, res) => {
 			data,
 		});
 	}
-
 });
 
 app.get("/profile/links", async (req, res) => {
@@ -316,6 +315,33 @@ app.get("/profile/text", async (req, res) => {
 
 app.get("/profile/upload", (req, res) => {
 	res.render("upload");
+});
+
+app.post("/profile/upload/text", async (req, res) => {
+	let text = req.body.desc;
+	let user_id = req.session.user_id;
+	let short_url = url.url_code();
+	let long_url = base_url + "/" + short_url;
+	let curr_date = new Date().toDateString();
+
+	var results = await db_uploads.userUpload({
+		long: long_url,
+		short: short_url,
+		desc: text,
+		type: 3,
+		createdDate: curr_date,
+		user_id: user_id,
+	});
+
+	if (results) {
+		res.render("upload_status", {
+			status: "Successful",
+		});
+	} else {
+		res.render("upload_status", {
+			status: "Unsuccessful.",
+		});
+	}
 });
 
 app.post("/profile/upload/image", upload.single("image"), async (req, res) => {
@@ -439,26 +465,24 @@ app.get("/:code", async (req, res) => {
 });
 
 app.post("/profile/update/active/:uploads_id", async (req, res) => {
-
 	let data = await db_uploads.getUploadRow({
-		uploads_id: req.params.uploads_id
-	})
+		uploads_id: req.params.uploads_id,
+	});
 
 	if (data[0].active == 1) {
 		await db_uploads.updateActive({
 			active: 0,
-			uploads_id: req.params.uploads_id
-		})
-		res.redirect("/profile")
-
+			uploads_id: req.params.uploads_id,
+		});
+		res.redirect("/profile");
 	} else {
 		await db_uploads.updateActive({
 			active: 1,
-			uploads_id: req.params.uploads_id
-		})
-		res.redirect("/profile")
+			uploads_id: req.params.uploads_id,
+		});
+		res.redirect("/profile");
 	}
-})
+});
 
 app.get("/createTables", async (req, res) => {
 	const create_tables = include("database/create_tables");
