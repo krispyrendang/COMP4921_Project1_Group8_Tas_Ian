@@ -443,7 +443,7 @@ app.get("/text/:code", async (req, res) => {
 			if (results[0].active == 1) {
 				// let long_url = results[0].long_url;
 				let uploads_id = results[0].uploads_id;
-				let desc = results[0].desc;
+				let desc = results[0].description;
 				let curr_date = new Date().toDateString();
 
 				await db_uploads.updateHits_Date({
