@@ -129,56 +129,50 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/loggingin", async (req, res) => {
-	if (!isValidSession(req)) {
-		res.redirect("/");
-	} else {
-		var email = req.body.email;
-		var password = req.body.password;
+	var email = req.body.email;
+	var password = req.body.password;
 
-		var results = await db_users.getUser({
-			email: email,
-			hashedPassword: password,
-		});
+	var results = await db_users.getUser({
+		email: email,
+		hashedPassword: password,
+	});
 
-		if (results) {
-			if (results.length == 1) {
-				//there should only be 1 user in the db that matches
-				if (bcrypt.compareSync(password, results[0].hashedPassword)) {
-					req.session.authenticated = true;
-					req.session.user_type = results[0].user_type;
-					req.session.username = results[0].username;
-					req.session.user_id = results[0].user_id;
-					req.session.cookie.maxAge = expireTime;
+	if (results) {
+		if (results.length == 1) {
+			//there should only be 1 user in the db that matches
+			if (bcrypt.compareSync(password, results[0].hashedPassword)) {
+				req.session.authenticated = true;
+				req.session.user_type = results[0].user_type;
+				req.session.username = results[0].username;
+				req.session.user_id = results[0].user_id;
+				req.session.cookie.maxAge = expireTime;
 
-					if (!isAdmin(req)) {
-						res.redirect("/home");
-					} else {
-						res.redirect("/admin");
-					}
-
-					return;
+				if (!isAdmin(req)) {
+					res.redirect("/home");
 				} else {
-					console.log("invalid password");
+					res.redirect("/admin");
 				}
-			} else {
-				console.log(
-					"invalid number of users matched: " +
-						results.length +
-						" (expected 1)."
-				);
-				res.render("login", {
-					error: "User and password not found.",
-				});
-				return;
-			}
-		}
 
-		console.log("user not found");
-		//user and password combination not found
-		res.render("login", {
-			error: "User and password not found.",
-		});
+				return;
+			} else {
+				console.log("invalid password");
+			}
+		} else {
+			console.log(
+				"invalid number of users matched: " + results.length + " (expected 1)."
+			);
+			res.render("login", {
+				error: "User and password not found.",
+			});
+			return;
+		}
 	}
+
+	console.log("user not found");
+	//user and password combination not found
+	res.render("login", {
+		error: "User and password not found.",
+	});
 });
 
 app.post("/logout", (req, res) => {
