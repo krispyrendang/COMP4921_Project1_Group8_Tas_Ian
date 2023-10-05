@@ -148,7 +148,7 @@ app.post("/loggingin", async (req, res) => {
 				req.session.cookie.maxAge = expireTime;
 
 				res.redirect("/home");
-				// return;
+				return;
 			} else {
 				console.log("invalid password");
 			}
