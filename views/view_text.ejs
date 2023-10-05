@@ -1,0 +1,17 @@
+<%- include("templates/header") %>
+
+<div class="home-title">
+    <h1>Upload</h1>
+</div>
+
+<div class="profile-divider"></div>
+
+<br>
+
+<form action="/view/text" method="get" class="text">
+    <label for="text" class="sr-only">Text</label>
+    <textarea required placeholder="Enter Text Here" name="desc" id="desc" cols="30" rows="10"><%= text %></textarea>
+    <button class="btn btn-success" type="submit">Save Text</button>
+</form>
+
+<%- include("templates/footer") %>

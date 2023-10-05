@@ -79,7 +79,7 @@ async function getUserUpload(postData) {
 
 async function getLongURL(postData) {
 	let getLongURLSQL = `
-        SELECT uploads_id, long_url, active
+        SELECT uploads_id, long_url, active, type
         FROM uploads
         WHERE short_url = :short_url;
     `;
@@ -168,12 +168,12 @@ async function updateActive(postData) {
 		UPDATE uploads
 		SET active = :active
 		WHERE uploads_id = :uploads_id;
-	`
+	`;
 
 	let params = {
 		active: postData.active,
-		uploads_id: postData.uploads_id
-	}
+		uploads_id: postData.uploads_id,
+	};
 
 	try {
 		const results = await database.query(updateActiveSQL, params);
@@ -191,11 +191,11 @@ async function getUploadRow(postData) {
 		SELECT active
 		FROM uploads
 		WHERE uploads_id = :uploads_id;
-	`
+	`;
 
 	let params = {
-		uploads_id: postData.uploads_id
-	}
+		uploads_id: postData.uploads_id,
+	};
 
 	try {
 		const results = await database.query(getUploadRowSQL, params);
@@ -208,9 +208,6 @@ async function getUploadRow(postData) {
 	}
 }
 
-
-
-
 module.exports = {
 	userUpload,
 	getUserUploadType,
@@ -220,5 +217,5 @@ module.exports = {
 	getLongURL,
 	updateHits_Date,
 	updateActive,
-	getUploadRow
+	getUploadRow,
 };

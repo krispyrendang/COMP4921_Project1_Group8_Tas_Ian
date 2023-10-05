@@ -321,7 +321,7 @@ app.post("/profile/upload/text", async (req, res) => {
 	let text = req.body.desc;
 	let user_id = req.session.user_id;
 	let short_url = url.url_code();
-	let long_url = base_url + "/" + short_url;
+	let long_url = base_url + "/text/" + short_url;
 	let curr_date = new Date().toDateString();
 
 	var results = await db_uploads.userUpload({
@@ -346,7 +346,6 @@ app.post("/profile/upload/text", async (req, res) => {
 
 app.post("/profile/upload/image", upload.single("image"), async (req, res) => {
 	let short = url.url_code();
-	let short_url = puny_url + short;
 	let curr_date = new Date().toDateString();
 	let buf64 = req.file.buffer.toString("base64");
 	user_id = req.session.user_id;
@@ -361,7 +360,7 @@ app.post("/profile/upload/image", upload.single("image"), async (req, res) => {
 
 				const success = await db_uploads.userUpload({
 					long: long_url,
-					short: short_url,
+					short: short,
 					desc: "image",
 					type: 2,
 					createdDate: curr_date,
@@ -389,7 +388,7 @@ app.get("/image/:image_uuid", (req, res) => {
 app.post("/profile/upload/link", async (req, res) => {
 	let long_url = req.body.long_url;
 	let user_id = req.session.user_id;
-	let short_url = base_url + "/" + url.url_code();
+	let short_url = url.url_code();
 	let curr_date = new Date().toDateString();
 
 	var results = await db_uploads.userUpload({
@@ -412,49 +411,50 @@ app.post("/profile/upload/link", async (req, res) => {
 	}
 });
 
-app.get("/redirect", (req, res) => {
-	console.log(req.body.long_url);
+// app.get("/redirect", (req, res) => {
+// 	console.log(req.body.long_url);
 
-	setTimeout(() => {
-		window.location.replace(req.body.long_url);
-		// res.redirect(req.body.long_url);
-	}, 3000);
-});
+// 	setTimeout(() => {
+// 		window.location.replace(req.body.long_url);
+// 		// res.redirect(req.body.long_url);
+// 	}, 3000);
+// });
 
-//Does not require session validation
-app.get("/:code", async (req, res) => {
+// app.get("/text/redirect", (req, res) => {
+// 	console.log("/text/redirect req.body.desc: " + req.body.desc);
+// 	let desc = req.body.desc;
+// 	setTimeout(() => {
+// 		res.render("view_text", {
+// 			desc: desc,
+// 		});
+// 	}, 3000);
+// });
+
+app.get("/text/:code", async (req, res) => {
 	try {
 		var results = await db_uploads.getLongURL({
-			short_url: base_url + "/" + req.params.code,
+			short_url: req.params.code,
 		});
 
-		if (results) {
+		if (results[0]) {
 			console.log("results.active: " + results[0].active);
+
+			//if short_url is active
 			if (results[0].active == 1) {
-				let long_url = results[0].long_url;
+				// let long_url = results[0].long_url;
 				let uploads_id = results[0].uploads_id;
+				let desc = results[0].desc;
 				let curr_date = new Date().toDateString();
 
 				await db_uploads.updateHits_Date({
 					uploads_id: uploads_id,
 					curr_date: curr_date,
 				});
-
-				res.redirect(301, "/redirect", {
-					status: "ACTIVE",
-					timer: 3,
-					longURL: long_url,
+				res.render("view_text", {
+					text: desc,
 				});
-				// res.redirect("/redirect");
-
-				// setTimeout(() => {
-				// 	location.replace(longURL);
-				// }, 3000);
 			} else {
 				res.render("inactive");
-				// setTimeout(() => {
-				// 	res.redirect("/profile");
-				// }, 3000);
 			}
 		} else {
 			res.render("404");
@@ -481,6 +481,40 @@ app.post("/profile/update/active/:uploads_id", async (req, res) => {
 			uploads_id: req.params.uploads_id,
 		});
 		res.redirect("/profile");
+	}
+});
+
+app.get("/:code", async (req, res) => {
+	try {
+		var results = await db_uploads.getLongURL({
+			short_url: req.params.code,
+		});
+
+		console.log(results[0]);
+
+		if (results[0]) {
+			console.log("results.active: " + results[0].active);
+
+			//if short_url is active
+			if (results[0].active == 1) {
+				let long_url = results[0].long_url;
+				let uploads_id = results[0].uploads_id;
+				let desc = results[0].desc;
+				let curr_date = new Date().toDateString();
+
+				await db_uploads.updateHits_Date({
+					uploads_id: uploads_id,
+					curr_date: curr_date,
+				});
+				res.redirect(long_url); //redirect to respective long_url for each type of upload
+			} else {
+				res.render("inactive");
+			}
+		} else {
+			res.render("404");
+		}
+	} catch (err) {
+		console.log(err);
 	}
 });
 
