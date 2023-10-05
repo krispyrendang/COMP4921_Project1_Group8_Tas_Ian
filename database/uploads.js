@@ -199,10 +199,32 @@ async function getUploadRow(postData) {
 
 	try {
 		const results = await database.query(getUploadRowSQL, params);
-		console.log("Successfully changed active status");
+		console.log("Successfully grabbed row");
 		return results[0];
 	} catch (err) {
-		console.log("Error changing active status");
+		console.log("Error grabbing row");
+		console.log(err);
+		return false;
+	}
+}
+
+async function getImageRow(postData) {
+	let getImageRowSQL = `
+		SELECT active
+		FROM uploads
+		WHERE long_url = :long_url;
+	`;
+
+	let params = {
+		long_url: postData.long_url,
+	};
+
+	try {
+		const results = await database.query(getImageRowSQL, params);
+		console.log("Successfully grabbed image status");
+		return results[0];
+	} catch (err) {
+		console.log("Error grabbing image status");
 		console.log(err);
 		return false;
 	}
@@ -218,4 +240,5 @@ module.exports = {
 	updateHits_Date,
 	updateActive,
 	getUploadRow,
+	getImageRow
 };

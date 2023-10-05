@@ -380,9 +380,22 @@ app.post("/profile/upload/image", upload.single("image"), async (req, res) => {
 });
 
 app.get("/image/:image_uuid", (req, res) => {
-	res.render("image", {
-		image_uuid: req.params.image_uuid,
-	});
+
+	let status = db_uploads.getImageRow({
+		long_url: base_url + "/image/" + req.params.image_uuid
+	})
+
+	if (status[0]) {
+		if (status[0].active == 1) {
+			res.render("image", {
+				image_uuid: req.params.image_uuid
+			});
+		} else {
+			res.render("redirect")
+		}
+	} else {
+		res.render("404")
+	}
 });
 
 app.post("/profile/upload/link", async (req, res) => {
